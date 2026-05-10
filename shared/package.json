@@ -1,0 +1,12 @@
+{
+  "name": "@starter/shared",
+  "type": "module",
+  "description": "Share types and constants",
+  "exports": {
+    "./schemas": "./schemas/index.ts",
+    "./constants": "./constants/index.ts"
+  },
+  "dependencies": {
+    "@starter/server": "*"
+  }
+}

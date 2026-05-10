@@ -1,0 +1,36 @@
+import fastifyPlugin from "fastify-plugin";
+import { newEnforcer, newModelFromString } from "casbin";
+import DrizzleAdapterImport from "drizzle-adapter";
+import { casbinRule } from "@tables/casbin-rule.js";
+
+export default fastifyPlugin(async (fastify) => {
+  const model = newModelFromString(`
+  [request_definition]
+  r = sub, obj, act
+
+  [policy_definition]
+  p = sub, obj, act
+
+  [role_definition]
+  g = _, _
+
+  [policy_effect]
+  e = some(where (p.eft == allow))
+
+  [matchers]
+  m = g(r.sub, p.sub) && (p.obj == "*" || r.obj == p.obj) && (p.act == "*" || r.act == p.act)
+  `);
+
+  const DrizzleAdapter =
+    (DrizzleAdapterImport as any).default || DrizzleAdapterImport;
+
+  const adapter = await DrizzleAdapter.newAdapter({
+    db: fastify.db,
+    table: casbinRule,
+  });
+
+  const enforcer = await newEnforcer(model, adapter);
+  await enforcer.loadPolicy();
+
+  fastify.decorate("casbin", enforcer);
+});
