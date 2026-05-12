@@ -8,11 +8,7 @@ export default async function (
     const url = request.url;
     const method = request.method;
 
-    const publicRoutes = [
-      "/api/auth/signup",
-      "/api/auth/signin",
-      "/api/auth/refresh",
-    ];
+    const publicRoutes = ["/auth/signup", "/auth/signin", "/auth/refresh"];
 
     if (publicRoutes.includes(url)) return;
 

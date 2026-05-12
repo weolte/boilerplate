@@ -1,12 +1,7 @@
 import { buildSchema } from "drizzle-graphql";
 import fastifyPlugin from "fastify-plugin";
 import mercurius from "mercurius";
-import {
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-} from "graphql";
+import { GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
 import { join } from "path";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
@@ -29,7 +24,7 @@ export default fastifyPlugin(async (fastify) => {
         health: {
           type: GraphQLString,
 
-          resolve: () => {
+          resolve: async (parent, args, context, info) => {
             return "ok";
           },
         },
@@ -81,5 +76,12 @@ export default fastifyPlugin(async (fastify) => {
     schema,
     graphiql: true,
     subscription: true,
+    context: async (request, reply) => {
+      await request.accessVerify();
+      const user = request.user as any;
+      return {
+        user,
+      };
+    },
   });
 });
