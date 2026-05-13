@@ -10,14 +10,14 @@ import { mergeSchemas } from "@graphql-tools/schema";
 export default fastifyPlugin(async (fastify) => {
   const { entities } = buildSchema(fastify.db);
 
-  const schemaFromFiles = await loadSchema(
+  const schemaFromLoader = await loadSchema(
     join(process.cwd(), "graphql/schema.graphql"),
     {
       loaders: [new GraphQLFileLoader()],
     },
   );
 
-  const schemaFromJS = new GraphQLSchema({
+  const schemaFromScript = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: "Query",
       fields: {
@@ -28,8 +28,23 @@ export default fastifyPlugin(async (fastify) => {
             return "ok";
           },
         },
-        users: entities.queries.users,
+        users: {
+          type: entities.queries.users.type,
+          args: entities.queries.users.args,
+          resolve: async (parent, args, context, info) => {
+            const users = await entities.queries.users.resolve(
+              parent,
+              args,
+              context,
+              info,
+            );
+
+            return users;
+          },
+        },
         todos: entities.queries.todos,
+        profiles: entities.queries.profiles,
+        profile: entities.queries.profilesSingle,
       },
     }),
     mutation: new GraphQLObjectType({
@@ -69,7 +84,7 @@ export default fastifyPlugin(async (fastify) => {
   });
 
   const schema = mergeSchemas({
-    schemas: [schemaFromFiles, schemaFromJS],
+    schemas: [schemaFromScript, schemaFromLoader],
   });
 
   fastify.register(mercurius, {
