@@ -92,7 +92,7 @@ export default fastifyPlugin(async (fastify) => {
     graphiql: true,
     subscription: true,
     context: async (request, reply) => {
-      await request.accessVerify();
+      await request.jwtVerify();
       const user = request.user as any;
       return {
         user,

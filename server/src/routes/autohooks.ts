@@ -5,12 +5,6 @@ export default async function (
   options: Record<string, any>,
 ) {
   fastify.addHook("onRequest", async (request, reply) => {
-    const url = request.url;
-
-    const publicRoutes = ["/auth/signup", "/auth/signin", "/auth/refresh"];
-
-    if (publicRoutes.includes(url)) return;
-
-    await request.accessVerify();
+    await request.jwtVerify();
   });
 }

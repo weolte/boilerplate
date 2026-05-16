@@ -40,27 +40,4 @@ export default async function (
       return await signin({ fastify, request, reply });
     },
   );
-
-  // Refresh token
-  fastify.get(
-    "/refresh",
-    {
-      schema: {
-        tags: ["auth"],
-        headers: z.object({
-          Authorization: z.string().default("Bearer token"),
-        }),
-      },
-      preHandler: async (request, reply) => {
-        try {
-          await request.refreshVerify();
-        } catch (err) {
-          return reply.send(err);
-        }
-      },
-    },
-    async (request, reply) => {
-      return reply.send("refreshed");
-    },
-  );
 }
