@@ -3,8 +3,10 @@ import fastifyJwt from "@fastify/jwt";
 import buildGetJwks from "get-jwks";
 
 const getJwks = buildGetJwks({
-  issuersWhitelist: ["https://auth.shukrullojondev.uz/application/o/ish/"],
-  jwksPath: "jwks/",
+  issuersWhitelist: [
+    `${String(process.env.OIDC_BASE_URL)}${process.env.OIDC_PROVIDER_PATH}`,
+  ],
+  jwksPath: String(process.env.OIDC_JWKS_PATH),
   providerDiscovery: true,
 });
 

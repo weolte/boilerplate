@@ -2,10 +2,10 @@ import type { FastifyInstance } from "fastify";
 import * as arctic from "arctic";
 
 const authentik = new arctic.Authentik(
-  "https://auth.shukrullojondev.uz",
-  "UNCMdATwwTtuW6jIIx9L9oIVrPCdI36U4kDKTv4F",
-  "EGvoXRrLN4gZFOi3Jks6jAmFy2R0Ayra5Z5AX4aPiYVhi4haRsAXMzwy9kWesIqPY43zBcEEbrlKLYHnlDqS0jSCUGK6jILnaGdqkTxk2F0UPUzLDfLZ30lhOr0s5Mq9",
-  "http://localhost:3002/auth/callback",
+  String(process.env.OIDC_BASE_URL),
+  String(process.env.OIDC_PROVIDER_CLIENT),
+  String(process.env.OIDC_PROVIDER_SECRET),
+  String(process.env.OIDC_PROVIDER_CALLBACK),
 );
 
 export default async function (fastify: FastifyInstance) {
