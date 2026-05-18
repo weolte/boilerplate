@@ -20,7 +20,7 @@ export default async function (fastify: FastifyInstance) {
       const state = arctic.generateState();
       const codeVerifier = arctic.generateCodeVerifier();
 
-      const scopes = ["openid", "profile", "email"];
+      const scopes = ["openid", "profile", "email", "groups", "offline_access"];
 
       const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 
@@ -76,12 +76,15 @@ export default async function (fastify: FastifyInstance) {
           storedVerifier,
         );
 
-        const accessToken = tokens.accessToken();
+        console.log(tokens);
 
+        const accessToken = tokens.accessToken();
+        const refreshToken = tokens.refreshToken();
         const idToken = tokens.idToken();
 
         return {
           accessToken,
+          refreshToken,
           idToken,
         };
       } catch (error) {
