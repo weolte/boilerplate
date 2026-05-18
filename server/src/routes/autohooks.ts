@@ -5,6 +5,12 @@ export default async function (
   options: Record<string, any>,
 ) {
   fastify.addHook("onRequest", async (request, reply) => {
+    const publicRoutes = ["/auth/login", "/auth/callback"];
+
+    if (publicRoutes.includes(request.url.split("?")[0]!)) {
+      return;
+    }
+
     await request.jwtVerify();
   });
 }

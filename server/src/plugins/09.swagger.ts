@@ -17,6 +17,6 @@ export default fastifyPlugin(async (fastify, options) => {
   });
 
   await fastify.register(fastifyScalar, {
-    routePrefix: "/api/doc",
+    routePrefix: "/doc",
   });
 });

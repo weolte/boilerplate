@@ -28,6 +28,7 @@
   "dependencies": {
     "@fastify/auth": "^5.0.4",
     "@fastify/autoload": "^6.3.1",
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
     "@fastify/jwt": "^10.0.0",
     "@fastify/rate-limit": "^10.3.0",
@@ -39,6 +40,7 @@
     "@graphql-tools/schema": "^10.0.33",
     "@scalar/fastify-api-reference": "^1.52.2",
     "@starter/shared": "*",
+    "arctic": "^3.7.0",
     "bcrypt": "^6.0.0",
     "casbin": "^5.50.0",
     "chart.js": "^4.5.1",

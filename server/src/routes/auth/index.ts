@@ -1,43 +1,96 @@
-import { signup, signin } from "@handlers/auth/index.js";
 import type { FastifyInstance } from "fastify";
-import { z } from "zod/v4";
+import * as arctic from "arctic";
 
-export default async function (
-  fastify: FastifyInstance,
-  options: Record<string, any>,
-) {
-  // Signup
-  fastify.post(
-    "/signup",
+const authentik = new arctic.Authentik(
+  "https://auth.shukrullojondev.uz",
+  "UNCMdATwwTtuW6jIIx9L9oIVrPCdI36U4kDKTv4F",
+  "EGvoXRrLN4gZFOi3Jks6jAmFy2R0Ayra5Z5AX4aPiYVhi4haRsAXMzwy9kWesIqPY43zBcEEbrlKLYHnlDqS0jSCUGK6jILnaGdqkTxk2F0UPUzLDfLZ30lhOr0s5Mq9",
+  "http://localhost:3002/auth/callback",
+);
+
+export default async function (fastify: FastifyInstance) {
+  fastify.get(
+    "/login",
     {
       schema: {
         tags: ["auth"],
-        body: z.object({
-          username: z.string(),
-          email: z.email(),
-          password: z.string(),
-        }),
       },
     },
-    async (request, reply) => {
-      return await signup({ fastify, request, reply });
+    async (_request, reply) => {
+      const state = arctic.generateState();
+      const codeVerifier = arctic.generateCodeVerifier();
+
+      const scopes = ["openid", "profile", "email"];
+
+      const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
+
+      console.log(url.toString());
+
+      return reply
+        .setCookie("oauth_state", state, {
+          path: "/",
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        })
+        .setCookie("oauth_verifier", codeVerifier, {
+          path: "/",
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        })
+        .redirect(url.toString());
     },
   );
 
-  // Signin
-  fastify.post(
-    "/signin",
+  fastify.get(
+    "/callback",
     {
       schema: {
         tags: ["auth"],
-        body: z.object({
-          identifier: z.string().default("test"),
-          password: z.string().default("testpass"),
-        }),
       },
     },
     async (request, reply) => {
-      return await signin({ fastify, request, reply });
+      const code = (request.query as any).code;
+      const state = (request.query as any).state;
+
+      const storedState = request.cookies.oauth_state;
+
+      const storedVerifier = request.cookies.oauth_verifier;
+
+      if (
+        !code ||
+        !state ||
+        !storedState ||
+        !storedVerifier ||
+        state !== storedState
+      ) {
+        return reply.code(400).send({
+          message: "Invalid OAuth state",
+        });
+      }
+
+      try {
+        const tokens = await authentik.validateAuthorizationCode(
+          code,
+          storedVerifier,
+        );
+
+        const accessToken = tokens.accessToken();
+
+        const idToken = tokens.idToken();
+
+        return {
+          accessToken,
+          idToken,
+        };
+      } catch (error) {
+        console.error(error);
+
+        return reply.code(500).send({
+          message: "OAuth failed",
+        });
+      }
     },
   );
 }
