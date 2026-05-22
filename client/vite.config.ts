@@ -16,6 +16,8 @@ export default defineConfig({
   },
   server: {
     port: 5555,
+    host: true,
+    allowedHosts: ['devhr.navoiyuran.uz'],
     proxy: {
       '/api': {
         target: 'http://localhost:3002',

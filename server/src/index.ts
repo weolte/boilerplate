@@ -25,9 +25,12 @@ import "dotenv/config";
     dir: path.join(import.meta.dirname, "routes"),
     autoHooks: true,
     cascadeHooks: true,
+    options: {
+      // prefix: "/api",
+    },
   });
 
-  fastify.listen({ port: 3002 }, function (err, address) {
+  fastify.listen({ port: 3002, host: "0.0.0.0" }, function (err, address) {
     if (err) {
       fastify.log.error(err);
       process.exit(1);
