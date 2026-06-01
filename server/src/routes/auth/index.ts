@@ -76,8 +76,6 @@ export default async function (fastify: FastifyInstance) {
           storedVerifier,
         );
 
-        console.log(tokens);
-
         const accessToken = tokens.accessToken();
         const refreshToken = tokens.refreshToken();
         const idToken = tokens.idToken();
