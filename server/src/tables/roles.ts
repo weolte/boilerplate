@@ -1,7 +1,10 @@
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { v7 as uuidv7 } from "uuid";
 
 export const roles = pgTable("roles", {
-  uuid: uuid().defaultRandom().primaryKey(),
+  uuid: uuid()
+    .primaryKey()
+    .$defaultFn(() => uuidv7()),
   keyword: varchar().notNull().unique(),
   titleUz: varchar().notNull().unique(),
   titleRu: varchar().notNull().unique(),
