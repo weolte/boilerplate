@@ -11,7 +11,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
-} from "@handlers/users/index.js";
+} from "@shared/handlers/users/index.js";
 
 const tags = ["users"];
 

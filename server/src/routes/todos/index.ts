@@ -11,14 +11,14 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
-} from "@handlers/todos/index.js";
-
-const tags = ["todos"];
+} from "@shared/handlers/todos/index.js";
 
 export default async function (
   fastify: FastifyInstance,
   options: Record<string, any>,
 ) {
+  const tags = ["todos"];
+
   // GET ALL
   fastify.get(
     "/",

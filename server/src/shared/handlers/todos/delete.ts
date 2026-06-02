@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { todos } from "@tables/todos.js";
+import { todos } from "@shared/tables/todos.js";
 import { eq } from "drizzle-orm";
 
-export async function getTodo({
+export async function deleteTodo({
   fastify,
   request,
   reply,
@@ -17,7 +17,9 @@ export async function getTodo({
     .select()
     .from(todos)
     .where(eq(todos.uuid, uuid));
-
   if (!result) return reply.code(404).send({ message: "Not found" });
-  return reply.send(result);
+
+  await fastify.db.delete(todos).where(eq(todos.uuid, result.uuid));
+
+  return reply.code(204).send();
 }

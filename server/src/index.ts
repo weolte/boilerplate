@@ -23,11 +23,9 @@ import "dotenv/config";
   fastify.setSerializerCompiler(serializerCompiler);
   await fastify.register(fastifyAutoload, {
     dir: path.join(import.meta.dirname, "routes"),
-    autoHooks: true,
-    cascadeHooks: true,
-    options: {
-      // prefix: "/api",
-    },
+    // autoHooks: true,
+    // cascadeHooks: true,
+    options: {},
   });
 
   fastify.listen({ port: 3002, host: "0.0.0.0" }, function (err, address) {

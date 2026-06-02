@@ -42,10 +42,7 @@
     "skipLibCheck": true,
 
     "paths": {
-      "@resolvers/*": ["./src/resolvers/*"],
-      "@handlers/*": ["./src/handlers/*"],
-      "@services/*": ["./src/services/*"],
-      "@tables/*": ["./src/tables/*"]
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["env.d.ts", "src/**/*"]

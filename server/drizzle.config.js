@@ -3,7 +3,7 @@ import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
   out: "./drizzle",
-  schema: "./src/share/tables",
+  schema: "./src/shared/tables",
   dialect: "postgresql",
   dbCredentials: {
     host: String(process.env.DB_HOST),

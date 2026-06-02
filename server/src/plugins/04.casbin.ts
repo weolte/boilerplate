@@ -1,7 +1,7 @@
 import fastifyPlugin from "fastify-plugin";
 import { newEnforcer, newModelFromString } from "casbin";
 import DrizzleAdapterImport from "drizzle-adapter";
-import { casbinRule } from "@tables/casbin-rule.js";
+import { casbinRule } from "@shared/tables/casbin-rule.js";
 
 export default fastifyPlugin(async (fastify) => {
   const model = newModelFromString(`

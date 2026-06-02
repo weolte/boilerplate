@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { users } from "@tables/users.js";
+import { roles } from "@shared/tables/roles.js";
 import { eq } from "drizzle-orm";
 
-export async function getUser({
+export async function getRole({
   fastify,
   request,
   reply,
@@ -15,8 +15,8 @@ export async function getUser({
 
   const [result] = await fastify.db
     .select()
-    .from(users)
-    .where(eq(users.uuid, uuid));
+    .from(roles)
+    .where(eq(roles.uuid, uuid));
 
   if (!result) return reply.code(404).send({ message: "Not found" });
   return reply.send(result);

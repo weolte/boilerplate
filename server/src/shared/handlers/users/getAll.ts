@@ -1,7 +1,7 @@
-import { todos } from "@tables/todos.js";
+import { users } from "@shared/tables/users.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export async function getTodos({
+export async function getUsers({
   fastify,
   request,
   reply,
@@ -10,6 +10,6 @@ export async function getTodos({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const result = await fastify.db.select().from(todos);
+  const result = await fastify.db.select().from(users);
   return reply.send(result);
 }

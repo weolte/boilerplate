@@ -1,7 +1,7 @@
-import { roles } from "@tables/roles.js";
+import { todos } from "@shared/tables/todos.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export async function getRoles({
+export async function getTodos({
   fastify,
   request,
   reply,
@@ -10,6 +10,6 @@ export async function getRoles({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const result = await fastify.db.select().from(roles);
+  const result = await fastify.db.select().from(todos);
   return reply.send(result);
 }

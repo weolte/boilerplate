@@ -11,14 +11,14 @@ import {
   createRole,
   updateRole,
   deleteRole,
-} from "@handlers/roles/index.js";
-
-const tags = ["roles"];
+} from "@shared/handlers/roles/index.js";
 
 export default async function (
   fastify: FastifyInstance,
   options: Record<string, any>,
 ) {
+  const tags = ["roles"];
+
   // GET ALL
   fastify.get(
     "/",

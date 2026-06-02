@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { sessions } from "@tables/sessions.js";
+import { roles } from "@shared/tables/roles.js";
 import { eq } from "drizzle-orm";
 
-export async function deleteSession({
+export async function deleteRole({
   fastify,
   request,
   reply,
@@ -15,13 +15,10 @@ export async function deleteSession({
 
   const [result] = await fastify.db
     .select()
-    .from(sessions)
-    .where(eq(sessions.uuid, uuid));
+    .from(roles)
+    .where(eq(roles.uuid, uuid));
   if (!result) return reply.code(404).send({ message: "Not found" });
 
-  await fastify.db
-    .delete(sessions)
-    .where(eq(sessions.uuid, result.uuid))
-    .returning();
+  await fastify.db.delete(roles).where(eq(roles.uuid, result.uuid)).returning();
   return reply.code(204).send();
 }
