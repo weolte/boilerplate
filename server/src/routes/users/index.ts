@@ -13,12 +13,12 @@ import {
   deleteUser,
 } from "@shared/handlers/users/index.js";
 
-const tags = ["users"];
-
 export default async function (
   fastify: FastifyInstance,
   options: Record<string, any>,
 ) {
+  const tags = ["users"];
+
   // GET ALL
   fastify.get(
     "",
