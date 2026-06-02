@@ -21,7 +21,7 @@ export default async function (
 
   // GET ALL
   fastify.get(
-    "/",
+    "",
     {
       schema: {
         tags,
@@ -59,7 +59,7 @@ export default async function (
 
   // CREATE
   fastify.post(
-    "/",
+    "",
     {
       schema: {
         tags,
