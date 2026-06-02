@@ -24,8 +24,6 @@ export default async function (fastify: FastifyInstance) {
 
       const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 
-      console.log(url.toString());
-
       return reply
         .setCookie("oauth_state", state, {
           path: "/",
@@ -86,12 +84,26 @@ export default async function (fastify: FastifyInstance) {
           idToken,
         };
       } catch (error) {
-        console.error(error);
-
         return reply.code(500).send({
           message: "OAuth failed",
         });
       }
     },
   );
+
+  fastify.get("/refresh", async (request, reply) => {
+    const refreshToken = request.headers["authorization"];
+
+    if (!refreshToken)
+      return reply.status(400).send({ message: "Invalid request" });
+
+    try {
+      const tokens = await authentik.refreshAccessToken(refreshToken);
+      return reply.send(tokens);
+    } catch (e) {
+      return reply
+        .status(400)
+        .send({ message: "Error to refresh access token" });
+    }
+  });
 }
