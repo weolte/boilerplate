@@ -1,88 +1,93 @@
 import { z } from "zod/v4";
 import type { FastifyInstance } from "fastify";
 
-const tags = ["casbin"];
-
 export default async function (
   fastify: FastifyInstance,
   options: Record<string, any>,
 ) {
-  // Get object policies
+  const tags = ["casbin"];
+
   fastify.get(
-    "/policy/:obj",
+    "/role-users/:role",
     {
       schema: {
         tags,
         params: z.object({
-          obj: z.string().default("analyzes"),
+          role: z.string(),
         }),
       },
     },
     async (request, reply) => {
-      const { obj } = request.params as { obj: string };
-      if (obj === "*")
-        return reply.status(400).send({ message: "Bad request" });
-      const object = "/" + obj.split("-").join("/");
-      const policies = await fastify.casbin.getFilteredPolicy(1, object);
-      return reply.send(policies);
+      const { role } = request.params as { role: string };
+      const userRoles = await fastify.casbin.getUsersForRole(role);
+      return reply.send(userRoles);
     },
   );
 
-  // Create policy
-  fastify.post(
-    "/policies",
+  fastify.get(
+    "/all-roles",
     {
       schema: {
         tags,
-        body: z
-          .array(z.string())
-          .min(3)
-          .max(3)
-          .default(["operator", "/analyzes", "GET"]),
       },
     },
     async (request, reply) => {
-      const [sub, obj, act] = request.body as string[];
-      if (!sub || !obj || !act)
-        return reply
-          .send(400)
-          .send({ message: "Bad request to create policy" });
+      const roles = await fastify.casbin.getAllRoles();
+      return roles;
+    },
+  );
 
-      const existed = await fastify.casbin.hasPolicy(sub, obj, act);
+  // Attach role to user
+  fastify.post(
+    "/attach-role",
+    {
+      schema: {
+        tags,
+        body: z.object({
+          user: z.uuid(),
+          role: z.string(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      const { user, role } = request.body as any;
+      if (!user || !role)
+        return reply.send(400).send({ message: "Bad request" });
+
+      const existed = await fastify.casbin.hasRoleForUser(user, role);
       if (existed)
-        return reply.status(409).send({ message: "This policy already exist" });
+        return reply
+          .status(409)
+          .send({ message: "This role already attached" });
 
-      const created = await fastify.casbin.addPolicy(sub, obj, act);
+      const created = await fastify.casbin.addRoleForUser(user, role);
       if (!created)
-        return reply.status(500).send({ message: "Error to create policy" });
+        return reply.status(500).send({ message: "Error to attach role" });
 
       return reply.status(204).send();
     },
   );
 
-  // Delete policy
-  fastify.delete(
-    "/policies",
+  // Unattach role to user
+  fastify.post(
+    "/unattach-role",
     {
       schema: {
         tags,
-        body: z
-          .array(z.string())
-          .min(3)
-          .max(3)
-          .default(["operator", "/analyzes", "GET"]),
+        body: z.object({
+          user: z.uuid(),
+          role: z.string(),
+        }),
       },
     },
     async (request, reply) => {
-      const [sub, obj, act] = request.body as string[];
-      if (!sub || !obj || !act)
-        return reply
-          .send(400)
-          .send({ message: "Bad request to create policy" });
+      const { user, role } = request.body as any;
+      if (!user || !role)
+        return reply.send(400).send({ message: "Bad request" });
 
-      const removed = await fastify.casbin.removePolicy(sub, obj, act);
+      const removed = await fastify.casbin.deleteRoleForUser(user, role);
       if (!removed)
-        return reply.status(500).send({ message: "Error to delete policy" });
+        return reply.status(500).send({ message: "Error to unattach role" });
 
       return reply.status(204).send();
     },

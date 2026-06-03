@@ -95,15 +95,13 @@ export default async function (fastify: FastifyInstance) {
     const refreshToken = request.headers["authorization"];
 
     if (!refreshToken)
-      return reply.status(400).send({ message: "Invalid request" });
+      return reply.status(400).send({ message: "Bad Request" });
 
     try {
       const tokens = await authentik.refreshAccessToken(refreshToken);
       return reply.send(tokens);
     } catch (e) {
-      return reply
-        .status(400)
-        .send({ message: "Error to refresh access token" });
+      return reply.status(400).send({ message: "Unauthorized" });
     }
   });
 }

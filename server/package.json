@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node --use-system-ca --import tsx src/index.ts --watch --watch-path=src",
+    "dev": "node --watch --watch-path=src --use-system-ca --import tsx src/index.ts",
     "build": "node build.js ",
     "start": "node --use-system-ca dist/index.js"
   },
