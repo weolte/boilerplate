@@ -1,4 +1,4 @@
-import { users } from "@shared/tables/users.js";
+import { users } from "@/shared/tables/users.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function getUsers({

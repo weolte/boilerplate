@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { roles } from "@shared/tables/roles.js";
+import { roles } from "@/shared/tables/roles.js";
 import { eq } from "drizzle-orm";
 
 export async function getRole({

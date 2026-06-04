@@ -42,7 +42,7 @@
     "skipLibCheck": true,
 
     "paths": {
-      "@shared/*": ["./src/shared/*"]
+      "@/shared/*": ["./src/shared/*"]
     }
   },
   "include": ["env.d.ts", "src/**/*"]

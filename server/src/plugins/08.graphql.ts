@@ -17,6 +17,7 @@ export default fastifyPlugin(async (fastify) => {
     },
   );
 
+  // * Must separate operations
   const schemaFromScript = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: "Query",
@@ -68,6 +69,7 @@ export default fastifyPlugin(async (fastify) => {
     schema,
     graphiql: true,
     subscription: true,
+    // * Uncomment when deploy to prod
     // context: async (request, reply) => {
     //   const body = request.body as any;
     //   if (body.operationName === "IntrospectionQuery") return {};

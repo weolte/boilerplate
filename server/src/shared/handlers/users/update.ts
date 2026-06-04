@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { UpdateUserType } from "@starter/shared/schemas";
-import { users } from "@shared/tables/users.js";
+import { users } from "@/shared/tables/users.js";
 import { eq } from "drizzle-orm";
 
 export async function updateUser({

@@ -11,7 +11,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
-} from "@shared/handlers/users/index.js";
+} from "@/shared/handlers/users/index.js";
 
 export default async function (
   fastify: FastifyInstance,

@@ -1,4 +1,4 @@
-import { roles } from "@shared/tables/roles.js";
+import { roles } from "@/shared/tables/roles.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function getRoles({

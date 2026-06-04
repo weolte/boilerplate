@@ -7,10 +7,14 @@ export default async function (
   fastify.addHook("onRequest", async (request, reply) => {
     const publicRoutes = ["/auth/login", "/auth/callback", "/auth/refresh"];
 
-    if (publicRoutes.includes(request.url.split("?")[0]!)) {
+    if (
+      publicRoutes.some(
+        (publicRoute) => publicRoute === request.url.split("?")[0]!,
+      )
+    ) {
       return;
     }
 
-    await request.jwtVerify();
+    return await request.jwtVerify();
   });
 }

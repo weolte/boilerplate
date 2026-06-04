@@ -11,7 +11,7 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
-} from "@shared/handlers/todos/index.js";
+} from "@/shared/handlers/todos/index.js";
 
 export default async function (
   fastify: FastifyInstance,

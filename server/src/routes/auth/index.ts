@@ -91,17 +91,57 @@ export default async function (fastify: FastifyInstance) {
     },
   );
 
-  fastify.get("/refresh", async (request, reply) => {
-    const refreshToken = request.headers["authorization"];
+  fastify.get(
+    "/refresh",
+    {
+      schema: {
+        tags: ["auth"],
+      },
+    },
+    async (request, reply) => {
+      const refreshToken = request.headers["authorization"];
 
-    if (!refreshToken)
-      return reply.status(400).send({ message: "Bad Request" });
+      if (!refreshToken)
+        return reply.status(400).send({ message: "Bad Request" });
 
-    try {
-      const tokens = await authentik.refreshAccessToken(refreshToken);
-      return reply.send(tokens);
-    } catch (e) {
-      return reply.status(400).send({ message: "Unauthorized" });
-    }
-  });
+      try {
+        const tokens = await authentik.refreshAccessToken(refreshToken);
+        return reply.send(tokens);
+      } catch (e) {
+        return reply.status(400).send({ message: "Unauthorized" });
+      }
+    },
+  );
+
+  fastify.get(
+    "/me",
+    {
+      schema: {
+        tags: ["auth"],
+      },
+    },
+    async (request, reply) => {
+      const user = request.user;
+      return reply.send(user);
+    },
+  );
+
+  fastify.get(
+    "/logout",
+    {
+      schema: {
+        tags: ["auth"],
+      },
+    },
+    async (request, reply) => {
+      const token = request.headers.authorization?.replace("Bearer ", "");
+      if (!token) return reply.status(400).send({ message: "Bad Request" });
+      try {
+        await authentik.revokeToken(token);
+        return reply.status(204).send();
+      } catch (e) {
+        return reply.status(400).send({ message: "Unauthorized" });
+      }
+    },
+  );
 }

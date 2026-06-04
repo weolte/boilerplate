@@ -14,7 +14,7 @@ await esbuild.build({
   splitting: true,
   chunkNames: "chunks/[name]-[hash]",
   alias: {
-    "@shared": "./src/shared",
+    "@/shared": "./src/shared",
   },
   tsconfig: "tsconfig.json",
   external: [

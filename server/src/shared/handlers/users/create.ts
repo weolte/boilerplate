@@ -1,5 +1,5 @@
 import type { InsertUserType } from "@starter/shared/schemas";
-import { users } from "@shared/tables/users.js";
+import { users } from "@/shared/tables/users.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function createUser({
