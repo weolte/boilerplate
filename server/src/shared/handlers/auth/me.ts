@@ -1,15 +1,17 @@
-import { roles } from "@/shared/tables/roles.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import * as arctic from "arctic";
 
-export async function getRoles({
+export async function me({
+  authentik,
   fastify,
   request,
   reply,
 }: {
+  authentik: arctic.Authentik;
   fastify: FastifyInstance;
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const result = await fastify.db.select().from(roles);
-  return reply.send(result);
+  const user = request.user;
+  return reply.send(user);
 }

@@ -1,5 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import * as arctic from "arctic";
+import {
+  callback,
+  refresh,
+  logout,
+  login,
+  me,
+} from "@/shared/handlers/auth/index.js";
 
 const authentik = new arctic.Authentik(
   String(process.env.OIDC_BASE_URL),
@@ -16,28 +23,8 @@ export default async function (fastify: FastifyInstance) {
         tags: ["auth"],
       },
     },
-    async (_request, reply) => {
-      const state = arctic.generateState();
-      const codeVerifier = arctic.generateCodeVerifier();
-
-      const scopes = ["openid", "profile", "email", "groups", "offline_access"];
-
-      const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
-
-      return reply
-        .setCookie("oauth_state", state, {
-          path: "/",
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-        })
-        .setCookie("oauth_verifier", codeVerifier, {
-          path: "/",
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-        })
-        .redirect(url.toString());
+    async (request, reply) => {
+      await login({ authentik, fastify, request, reply });
     },
   );
 
@@ -49,45 +36,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const code = (request.query as any).code;
-      const state = (request.query as any).state;
-
-      const storedState = request.cookies.oauth_state;
-
-      const storedVerifier = request.cookies.oauth_verifier;
-
-      if (
-        !code ||
-        !state ||
-        !storedState ||
-        !storedVerifier ||
-        state !== storedState
-      ) {
-        return reply.code(400).send({
-          message: "Invalid OAuth state",
-        });
-      }
-
-      try {
-        const tokens = await authentik.validateAuthorizationCode(
-          code,
-          storedVerifier,
-        );
-
-        const accessToken = tokens.accessToken();
-        const refreshToken = tokens.refreshToken();
-        const idToken = tokens.idToken();
-
-        return {
-          accessToken,
-          refreshToken,
-          idToken,
-        };
-      } catch (error) {
-        return reply.code(500).send({
-          message: "OAuth failed",
-        });
-      }
+      await callback({ authentik, fastify, request, reply });
     },
   );
 
@@ -99,17 +48,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const refreshToken = request.headers["authorization"];
-
-      if (!refreshToken)
-        return reply.status(400).send({ message: "Bad Request" });
-
-      try {
-        const tokens = await authentik.refreshAccessToken(refreshToken);
-        return reply.send(tokens);
-      } catch (e) {
-        return reply.status(400).send({ message: "Unauthorized" });
-      }
+      await refresh({ authentik, fastify, request, reply });
     },
   );
 
@@ -121,8 +60,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const user = request.user;
-      return reply.send(user);
+      await me({ authentik, fastify, request, reply });
     },
   );
 
@@ -134,14 +72,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const token = request.headers.authorization?.replace("Bearer ", "");
-      if (!token) return reply.status(400).send({ message: "Bad Request" });
-      try {
-        await authentik.revokeToken(token);
-        return reply.status(204).send();
-      } catch (e) {
-        return reply.status(400).send({ message: "Unauthorized" });
-      }
+      await logout({ authentik, fastify, request, reply });
     },
   );
 }
