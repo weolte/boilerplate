@@ -15,8 +15,9 @@ export async function refresh({
   const refreshToken = request.headers.authorization?.replace("Bearer ", "");
   if (!refreshToken) return reply.status(400).send({ message: "Bad Request" });
   try {
-    const tokens = await authentik.refreshAccessToken(refreshToken);
-    return reply.send(tokens);
+    const { data }: { data: any } =
+      await authentik.refreshAccessToken(refreshToken);
+    return reply.send({ accessToken: data.access_token });
   } catch (e) {
     return reply.status(401).send({ message: "Unauthorized" });
   }
