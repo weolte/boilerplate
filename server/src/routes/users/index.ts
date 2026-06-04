@@ -31,7 +31,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await getUsers({ fastify, request, reply });
+      await getUsers({ fastify, request, reply });
     },
   );
 
@@ -53,7 +53,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await getUser({ fastify, request, reply });
+      await getUser({ fastify, request, reply });
     },
   );
 
@@ -70,7 +70,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await createUser({ fastify, request, reply });
+      await createUser({ fastify, request, reply });
     },
   );
 
@@ -87,7 +87,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await updateUser({ fastify, request, reply });
+      await updateUser({ fastify, request, reply });
     },
   );
 
@@ -103,7 +103,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await deleteUser({ fastify, request, reply });
+      await deleteUser({ fastify, request, reply });
     },
   );
 }

@@ -16,15 +16,17 @@ const authentik = new arctic.Authentik(
 );
 
 export default async function (fastify: FastifyInstance) {
+  const tags = ["auth"];
+
   fastify.get(
     "/login",
     {
       schema: {
-        tags: ["auth"],
+        tags,
       },
     },
     async (request, reply) => {
-      await login({ authentik, fastify, request, reply });
+      return await login({ authentik, fastify, request, reply });
     },
   );
 
@@ -32,11 +34,11 @@ export default async function (fastify: FastifyInstance) {
     "/callback",
     {
       schema: {
-        tags: ["auth"],
+        tags,
       },
     },
     async (request, reply) => {
-      await callback({ authentik, fastify, request, reply });
+      return await callback({ authentik, fastify, request, reply });
     },
   );
 
@@ -44,11 +46,11 @@ export default async function (fastify: FastifyInstance) {
     "/refresh",
     {
       schema: {
-        tags: ["auth"],
+        tags,
       },
     },
     async (request, reply) => {
-      await refresh({ authentik, fastify, request, reply });
+      return await refresh({ authentik, fastify, request, reply });
     },
   );
 
@@ -56,11 +58,11 @@ export default async function (fastify: FastifyInstance) {
     "/me",
     {
       schema: {
-        tags: ["auth"],
+        tags,
       },
     },
     async (request, reply) => {
-      await me({ authentik, fastify, request, reply });
+      return await me({ authentik, fastify, request, reply });
     },
   );
 
@@ -68,11 +70,11 @@ export default async function (fastify: FastifyInstance) {
     "/logout",
     {
       schema: {
-        tags: ["auth"],
+        tags,
       },
     },
     async (request, reply) => {
-      await logout({ authentik, fastify, request, reply });
+      return await logout({ authentik, fastify, request, reply });
     },
   );
 }

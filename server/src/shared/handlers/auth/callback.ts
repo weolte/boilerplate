@@ -40,6 +40,8 @@ export async function callback({
     const accessToken = tokens.accessToken();
     const refreshToken = tokens.refreshToken();
     const idToken = tokens.idToken();
+    const claims = arctic.decodeIdToken(idToken);
+    console.log(claims);
 
     return {
       accessToken,

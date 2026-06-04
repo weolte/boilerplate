@@ -12,14 +12,12 @@ export async function refresh({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const refreshToken = request.headers["authorization"];
-
+  const refreshToken = request.headers.authorization?.replace("Bearer ", "");
   if (!refreshToken) return reply.status(400).send({ message: "Bad Request" });
-
   try {
     const tokens = await authentik.refreshAccessToken(refreshToken);
     return reply.send(tokens);
   } catch (e) {
-    return reply.status(400).send({ message: "Unauthorized" });
+    return reply.status(401).send({ message: "Unauthorized" });
   }
 }

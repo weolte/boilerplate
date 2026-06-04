@@ -31,7 +31,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await getTodos({ fastify, request, reply });
+      await getTodos({ fastify, request, reply });
     },
   );
 
@@ -53,7 +53,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await getTodo({ fastify, request, reply });
+      await getTodo({ fastify, request, reply });
     },
   );
 
@@ -70,7 +70,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await createTodo({ fastify, request, reply });
+      await createTodo({ fastify, request, reply });
     },
   );
 
@@ -87,7 +87,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await updateTodo({ fastify, request, reply });
+      await updateTodo({ fastify, request, reply });
     },
   );
 
@@ -103,7 +103,7 @@ export default async function (
       },
     },
     async (request, reply) => {
-      return await deleteTodo({ fastify, request, reply });
+      await deleteTodo({ fastify, request, reply });
     },
   );
 }

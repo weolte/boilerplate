@@ -12,10 +12,10 @@ export async function logout({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const token = request.headers.authorization?.replace("Bearer ", "");
-  if (!token) return reply.status(400).send({ message: "Bad Request" });
+  const refreshToken = request.headers.authorization?.replace("Bearer ", "");
+  if (!refreshToken) return reply.status(400).send({ message: "Bad Request" });
   try {
-    await authentik.revokeToken(token);
+    await authentik.revokeToken(refreshToken);
     return reply.status(204).send();
   } catch (e) {
     return reply.status(400).send({ message: "Unauthorized" });
