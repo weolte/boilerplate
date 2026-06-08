@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import MainLayout from '@/layouts/Main.vue'
 
 import { useI18n } from 'vue-i18n'
 import { onMounted, ref } from 'vue'
 import { createClient } from 'graphql-ws'
 import type { SelectTodoType } from '@starter/shared/schemas'
+import { useApi } from '@/lib/api'
+import { useTokensStore } from '@/stores/tokens'
+
+const tokensStore = useTokensStore()
 
 const client = createClient({
   url: '/api/graphql',
+  connectionParams: () => {
+    return {
+      Authorization: `Bearer ${tokensStore.accessToken}`,
+    };
+  }
 })
 
 const { t } = useI18n()
@@ -16,13 +24,13 @@ const todos = ref<SelectTodoType[]>([])
 const newTodo = ref('')
 
 onMounted(async () => {
-  const response = await fetch('/api/graphql', {
+  const { isFetching, error, data } = await useApi('/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      query: `query GetTodos {
+      query: `{
         todos(orderBy: {text: {priority: 1, direction: asc}}) {
           uuid
           text
@@ -30,12 +38,11 @@ onMounted(async () => {
       }`,
     }),
   })
-
-  const result = await response.json()
+  const result = JSON.parse(data.value as string) as any
   todos.value = result.data.todos
 
   const subscription = client.iterate({
-    query: `subscription SubscribeTodo {
+    query: `subscription {
       todoAdded {
         uuid
         text
@@ -49,7 +56,7 @@ onMounted(async () => {
 })
 
 async function handleAdd() {
-  const response = await fetch('/api/graphql', {
+  const { isFetching, error, data } = await useApi('/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -69,23 +76,21 @@ async function handleAdd() {
     }),
   })
 
-  const result = await response.json()
+  const result = JSON.parse(data.value as string) as any
 }
 </script>
 
 <template>
-  <MainLayout>
-    <main class="h-full">
-      <h1>{{ t('message.hello') }}</h1>
+  <main class="h-full">
+    <h1>{{ t('message.hello') }}</h1>
 
-      <form @submit.prevent="handleAdd">
-        <input class="input" v-model="newTodo" type="text" />
-        <input class="btn" type="submit" value="Add" />
-      </form>
+    <form @submit.prevent="handleAdd">
+      <input class="input" v-model="newTodo" type="text" />
+      <input class="btn" type="submit" value="Add" />
+    </form>
 
-      <div v-for="todo in todos">
-        {{ todo.text }}
-      </div>
-    </main>
-  </MainLayout>
+    <div v-for="todo in todos">
+      {{ todo.text }}
+    </div>
+  </main>
 </template>

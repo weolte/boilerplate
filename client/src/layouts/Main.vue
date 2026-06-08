@@ -2,6 +2,7 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import MobileNav from '@/components/MobileNav.vue';
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
@@ -10,7 +11,7 @@ import MobileNav from '@/components/MobileNav.vue';
     <div class="drawer-content flex flex-col">
       <Header />
       <div class="flex-1 bg-base-300">
-        <slot />
+        <RouterView />
       </div>
       <Footer />
     </div>
@@ -19,5 +20,4 @@ import MobileNav from '@/components/MobileNav.vue';
       <MobileNav />
     </div>
   </div>
-
 </template>

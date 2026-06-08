@@ -3,7 +3,6 @@ import * as arctic from "arctic";
 
 export async function callback({
   authentik,
-  fastify,
   request,
   reply,
 }: {
@@ -16,7 +15,6 @@ export async function callback({
   const state = (request.query as any).state;
 
   const storedState = request.cookies.oauth_state;
-
   const storedVerifier = request.cookies.oauth_verifier;
 
   if (
@@ -26,9 +24,7 @@ export async function callback({
     !storedVerifier ||
     state !== storedState
   ) {
-    return reply.code(400).send({
-      message: "Invalid OAuth state",
-    });
+    return reply.code(400).send("Invalid OAuth state");
   }
 
   try {
@@ -40,13 +36,30 @@ export async function callback({
     const accessToken = tokens.accessToken();
     const refreshToken = tokens.refreshToken();
 
-    return {
-      accessToken,
-      refreshToken,
-    };
-  } catch (error) {
-    return reply.code(500).send({
-      message: "OAuth failed",
-    });
+    return reply.type("text/html").send(`
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authentication Complete</title>
+</head>
+<body>
+  <script>
+    if (window.opener) {
+      window.opener.postMessage(
+        {
+          accessToken: ${JSON.stringify(accessToken)},
+          refreshToken: ${JSON.stringify(refreshToken)}
+        },
+        "https://devhr.navoiyuran.uz"
+      );
+
+      window.close();
+    }
+  </script>
+</body>
+</html>
+`);
+  } catch {
+    return reply.code(500).send("OAuth failed");
   }
 }

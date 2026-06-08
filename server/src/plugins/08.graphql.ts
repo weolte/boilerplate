@@ -69,15 +69,16 @@ export default fastifyPlugin(async (fastify) => {
     schema,
     graphiql: true,
     subscription: true,
-    // context: async (request, reply) => {
-    //   const body = request.body as any;
-    //   if (body.operationName === "IntrospectionQuery") return {};
+    context: async (request, reply) => {
+      const body = request.body as any;
+      if (body.operationName === "IntrospectionQuery") return {};
 
-    //   await request.jwtVerify();
-    //   const user = request.user as any;
-    //   return {
-    //     user,
-    //   };
-    // },
+      await request.jwtVerify();
+      const user = request.user as any;
+
+      return {
+        user,
+      };
+    },
   });
 });

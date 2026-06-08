@@ -34,15 +34,13 @@ const chartOptions = ref({
 </script>
 
 <template>
-  <MainLayout>
-    <main class="h-full">
-      <h1>{{ t('message.hello') }}</h1>
+  <main class="h-full">
+    <h1>{{ t('message.hello') }}</h1>
 
-      <button class="btn">PING</button>
+    <button class="btn">PING</button>
 
-      <div class="w-150">
-        <Bar :options="chartOptions" :data="chartData" />
-      </div>
-    </main>
-  </MainLayout>
+    <div class="w-150">
+      <Bar :options="chartOptions" :data="chartData" />
+    </div>
+  </main>
 </template>
