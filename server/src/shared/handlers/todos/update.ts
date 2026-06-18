@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { UpdateTodoType } from "@starter/shared/schemas";
-import { todos } from "@/shared/tables/todos.js";
+import { todos } from "@/shared/tables/todos";
 import { eq } from "drizzle-orm";
 
 export async function updateTodo({

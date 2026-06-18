@@ -6,7 +6,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
-import { users } from "./users.js";
+import { users } from "./users";
 
 export const sessions = pgTable(
   "sessions",

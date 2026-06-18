@@ -6,7 +6,7 @@ import {
   logout,
   login,
   me,
-} from "@/shared/handlers/auth/index.js";
+} from "@/shared/handlers/auth/index";
 
 const authentik = new arctic.Authentik(
   String(process.env.OIDC_BASE_URL),

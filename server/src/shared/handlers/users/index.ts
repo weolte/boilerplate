@@ -1,5 +1,5 @@
-export { createUser } from "./create.js";
-export { deleteUser } from "./delete.js";
-export { getUsers } from "./getAll.js";
-export { getUser } from "./getOne.js";
-export { updateUser } from "./update.js";
+export { createUser } from "./create";
+export { deleteUser } from "./delete";
+export { getUsers } from "./getAll";
+export { getUser } from "./getOne";
+export { updateUser } from "./update";

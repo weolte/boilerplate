@@ -34,7 +34,6 @@ await esbuild.build({
     "arctic",
     "bcrypt",
     "casbin",
-    "chart.js",
     "dotenv",
     "drizzle-adapter",
     "drizzle-graphql",

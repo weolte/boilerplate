@@ -1,1 +1,1 @@
-export * from "./ttl.js";
+export * from "./ttl";

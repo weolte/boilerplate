@@ -2,11 +2,11 @@
   "name": "@starter/server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "dev": "node --watch --watch-path=src --use-system-ca --import tsx src/index.ts",
-    "build": "node build.js ",
-    "start": "node --use-system-ca dist/index.js"
+    "build": "node build ",
+    "start": "node --use-system-ca dist/index"
   },
   "keywords": [],
   "author": "",
@@ -44,7 +44,7 @@
     "arctic": "^3.7.0",
     "bcrypt": "^6.0.0",
     "casbin": "^5.50.0",
-    "chart.js": "^4.5.1",
+    "chart": "^4.5.1",
     "dotenv": "^17.4.2",
     "drizzle-adapter": "^1.4.0",
     "drizzle-graphql": "^0.8.5",

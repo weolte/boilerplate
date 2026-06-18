@@ -1,3 +1,3 @@
-export * from "./session.js";
-export * from "./todo.js";
-export * from "./user.js";
+export * from "./session";
+export * from "./todo";
+export * from "./user";
