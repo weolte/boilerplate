@@ -1,6 +1,6 @@
 import { createFetch } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import { useTokensStore } from '@/stores/tokens'
+import router from '@/router'
 
 let refreshPromise: Promise<string | null> | null = null
 
@@ -48,7 +48,6 @@ export const useApi = createFetch({
       return ctx
     },
     async onFetchError(ctx) {
-      const router = useRouter()
       const tokensStore = useTokensStore()
 
       if (ctx.response?.status === 401 && tokensStore.refreshToken) {
