@@ -25,6 +25,22 @@ export default async function (
   );
 
   fastify.get(
+    "/user-roles",
+    {
+      schema: {
+        tags,
+      },
+    },
+    async (request, reply) => {
+      const user = request.user as any;
+      const sub = user?.sub || user?.email || user?.preferred_username;
+      if (!sub) return reply.status(401).send({ message: "Unauthorized" });
+      const roles = await fastify.casbin.getRolesForUser(sub);
+      return reply.send(roles);
+    },
+  );
+
+  fastify.get(
     "/all-roles",
     {
       schema: {
@@ -52,7 +68,7 @@ export default async function (
     async (request, reply) => {
       const { user, role } = request.body as any;
       if (!user || !role)
-        return reply.send(400).send({ message: "Bad request" });
+        return reply.status(400).send({ message: "Bad request" });
 
       const existed = await fastify.casbin.hasRoleForUser(user, role);
       if (existed)
@@ -83,7 +99,7 @@ export default async function (
     async (request, reply) => {
       const { user, role } = request.body as any;
       if (!user || !role)
-        return reply.send(400).send({ message: "Bad request" });
+        return reply.status(400).send({ message: "Bad request" });
 
       const removed = await fastify.casbin.deleteRoleForUser(user, role);
       if (!removed)

@@ -19,6 +19,9 @@ export async function login({
 
   const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 
+  const referer = request.headers["referer"];
+  const origin = referer ? new URL(referer).origin : "http://localhost:5555";
+
   return reply
     .setCookie("oauth_state", state, {
       path: "/",
@@ -27,6 +30,12 @@ export async function login({
       sameSite: "lax",
     })
     .setCookie("oauth_verifier", codeVerifier, {
+      path: "/",
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    })
+    .setCookie("oauth_origin", origin, {
       path: "/",
       httpOnly: true,
       secure: false,

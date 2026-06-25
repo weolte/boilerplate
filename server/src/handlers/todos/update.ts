@@ -1,8 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { todos } from "@/shared/tables/todos";
+import type { UpdateTodoType } from "@starter/shared/schemas";
+import { todos } from "@starter/shared/tables";
 import { eq } from "drizzle-orm";
 
-export async function getTodo({
+export async function updateTodo({
   fastify,
   request,
   reply,
@@ -12,12 +13,18 @@ export async function getTodo({
   reply: FastifyReply;
 }) {
   const { uuid } = request.params as { uuid: string };
+  const body = request.body as Partial<UpdateTodoType>;
 
   const [result] = await fastify.db
     .select()
     .from(todos)
     .where(eq(todos.uuid, uuid));
-
   if (!result) return reply.code(404).send({ message: "Not found" });
-  return reply.send(result);
+
+  await fastify.db
+    .update(todos)
+    .set(body)
+    .where(eq(todos.uuid, result.uuid))
+    .returning();
+  return reply.code(204).send();
 }

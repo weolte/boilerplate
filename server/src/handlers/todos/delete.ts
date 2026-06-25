@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { users } from "@/shared/tables/users";
+import { todos } from "@starter/shared/tables";
 import { eq } from "drizzle-orm";
 
-export async function getUser({
+export async function deleteTodo({
   fastify,
   request,
   reply,
@@ -15,9 +15,11 @@ export async function getUser({
 
   const [result] = await fastify.db
     .select()
-    .from(users)
-    .where(eq(users.uuid, uuid));
-
+    .from(todos)
+    .where(eq(todos.uuid, uuid));
   if (!result) return reply.code(404).send({ message: "Not found" });
-  return reply.send(result);
+
+  await fastify.db.delete(todos).where(eq(todos.uuid, result.uuid));
+
+  return reply.code(204).send();
 }

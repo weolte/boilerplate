@@ -1,8 +1,11 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import * as arctic from "arctic";
+import { sessions, users } from "@starter/shared/tables";
+import { eq } from "drizzle-orm";
 
 export async function callback({
   authentik,
+  fastify,
   request,
   reply,
 }: {
@@ -35,6 +38,49 @@ export async function callback({
 
     const accessToken = tokens.accessToken();
     const refreshToken = tokens.refreshToken();
+    const idToken = tokens.idToken();
+
+    const claims = JSON.parse(
+      Buffer.from(idToken.split(".")[1]!, "base64").toString(),
+    );
+
+    const sub = claims.sub || claims.preferred_username || claims.email;
+    const email = claims.email;
+    const username = claims.preferred_username || claims.nickname || claims.email;
+
+    const [existing] = await fastify.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+
+    const record = existing
+      ? existing
+      : (
+          await fastify.db
+            .insert(users)
+            .values({
+              username,
+              email,
+              password: "",
+              verified: true,
+            })
+            .returning()
+        )[0]!;
+
+    const ip = request.ip;
+    const agent = request.headers["user-agent"] || "";
+
+    await fastify.db
+      .insert(sessions)
+      .values({
+        userUuid: record.uuid,
+        userIp: ip,
+        userAgent: agent,
+        userToken: accessToken,
+      })
+      .returning();
+
+    const origin = request.cookies.oauth_origin || "http://localhost:5555";
 
     return reply.type("text/html").send(`
 <!DOCTYPE html>
@@ -50,7 +96,7 @@ export async function callback({
           accessToken: ${JSON.stringify(accessToken)},
           refreshToken: ${JSON.stringify(refreshToken)}
         },
-        "https://devhr.navoiyuran.uz"
+        ${JSON.stringify(origin)}
       );
 
       window.close();
@@ -60,6 +106,7 @@ export async function callback({
 </html>
 `);
   } catch {
+
     return reply.code(500).send("OAuth failed");
   }
 }

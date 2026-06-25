@@ -1,17 +1,15 @@
+import { users } from "@starter/shared/tables";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import * as arctic from "arctic";
 
-export async function me({
-  authentik,
+export async function getUsers({
   fastify,
   request,
   reply,
 }: {
-  authentik: arctic.Authentik;
   fastify: FastifyInstance;
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const user = request.user;
-  return reply.send(user);
+  const result = await fastify.db.select().from(users);
+  return reply.send(result);
 }

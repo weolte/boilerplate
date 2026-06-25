@@ -11,7 +11,7 @@ import router from './router'
 const app = createApp(App)
 const i18n = createI18n({
   legacy: false,
-  locale: 'uz',
+  locale: localStorage.getItem('locale') || 'uz',
   messages,
 })
 

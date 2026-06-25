@@ -2,35 +2,23 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export interface MenuItem {
-  label: string
+  key: string
   to?: string
   children?: MenuItem[]
 }
 
 export const useNavStore = defineStore('nav', () => {
   const items = ref([
-    { label: 'Home', to: '/' },
-    { label: 'Todos', to: '/todos' },
+    { key: 'nav.home', to: '/' },
+    { key: 'nav.todos', to: '/todos' },
     {
-      label: 'Hover',
+      key: 'nav.routes',
       children: [
-        { label: 'Item 1' },
-        { label: 'About', to: '/about' },
-        {
-          label: 'Hover',
-          children: [
-            { label: 'Item 1' },
-            { label: 'About', to: '/about' },
-            {
-              label: 'Hover',
-              children: [{ label: 'Item 1' }, { label: 'About', to: '/about' }],
-            },
-          ],
-        },
+        { key: 'nav.about', to: '/about' },
       ],
     },
-    { label: 'Routes', to: '/routes' },
-    { label: 'Access', to: '/access' },
+    { key: 'nav.access', to: '/access' },
+    { key: 'nav.sessions', to: '/sessions' },
   ])
 
   return { items }

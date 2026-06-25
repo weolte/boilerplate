@@ -1,4 +1,4 @@
-import { todos } from "@/shared/tables/todos";
+import { todos } from "@starter/shared/tables";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function getTodos({

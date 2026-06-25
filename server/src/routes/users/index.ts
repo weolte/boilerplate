@@ -11,7 +11,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-} from "@/shared/handlers/users/index";
+} from "@/handlers/users/index";
+import { authorize } from "@/casbin/authorize";
 
 export default async function (
   fastify: FastifyInstance,
@@ -29,6 +30,7 @@ export default async function (
           200: z.array(selectUserSchema),
         },
       },
+      preHandler: [authorize("users", "read")],
     },
     async (request, reply) => {
       await getUsers({ fastify, request, reply });
@@ -51,6 +53,7 @@ export default async function (
           }),
         },
       },
+      preHandler: [authorize("users", "read")],
     },
     async (request, reply) => {
       await getUser({ fastify, request, reply });
@@ -68,6 +71,7 @@ export default async function (
           201: selectUserSchema,
         },
       },
+      preHandler: [authorize("users", "create")],
     },
     async (request, reply) => {
       await createUser({ fastify, request, reply });
@@ -85,6 +89,7 @@ export default async function (
         }),
         body: updateUserSchema.partial(),
       },
+      preHandler: [authorize("users", "update")],
     },
     async (request, reply) => {
       await updateUser({ fastify, request, reply });
@@ -101,6 +106,7 @@ export default async function (
           uuid: z.uuid(),
         }),
       },
+      preHandler: [authorize("users", "delete")],
     },
     async (request, reply) => {
       await deleteUser({ fastify, request, reply });

@@ -14,14 +14,14 @@ await esbuild.build({
   splitting: true,
   chunkNames: "chunks/[name]-[hash]",
   alias: {
-    "@/shared": "./src/shared",
+    "@/handlers": "./src/handlers",
+    "@/casbin": "./src/casbin",
   },
   tsconfig: "tsconfig.json",
   external: [
     "@fastify/auth",
     "@fastify/autoload",
     "@fastify/cookie",
-    "@fastify/cors",
     "@fastify/jwt",
     "@fastify/rate-limit",
     "@fastify/redis",
@@ -38,7 +38,6 @@ await esbuild.build({
     "drizzle-adapter",
     "drizzle-graphql",
     "drizzle-orm",
-    "drizzle-zod",
     "fastify",
     "fastify-plugin",
     "fastify-type-provider-zod",
@@ -46,6 +45,5 @@ await esbuild.build({
     "graphql",
     "mercurius",
     "pg",
-    "uuid",
   ],
 });

@@ -1,9 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import type { UpdateUserType } from "@starter/shared/schemas";
-import { users } from "@/shared/tables/users";
+import { users } from "@starter/shared/tables";
 import { eq } from "drizzle-orm";
 
-export async function updateUser({
+export async function deleteUser({
   fastify,
   request,
   reply,
@@ -13,10 +12,6 @@ export async function updateUser({
   reply: FastifyReply;
 }) {
   const { uuid } = request.params as { uuid: string };
-  const body = request.body as Partial<UpdateUserType>;
-
-  if (uuid !== body.uuid)
-    return reply.status(409).send({ message: "Invalide uuid" });
 
   const [result] = await fastify.db
     .select()
@@ -24,10 +19,6 @@ export async function updateUser({
     .where(eq(users.uuid, uuid));
   if (!result) return reply.code(404).send({ message: "Not found" });
 
-  await fastify.db
-    .update(users)
-    .set(body)
-    .where(eq(users.uuid, result.uuid))
-    .returning();
+  await fastify.db.delete(users).where(eq(users.uuid, result.uuid)).returning();
   return reply.code(204).send();
 }

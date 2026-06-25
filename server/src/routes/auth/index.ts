@@ -6,7 +6,8 @@ import {
   logout,
   login,
   me,
-} from "@/shared/handlers/auth/index";
+  listSessions,
+} from "@/handlers/auth/index";
 
 const authentik = new arctic.Authentik(
   String(process.env.OIDC_BASE_URL),
@@ -62,7 +63,19 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      return await me({ authentik, fastify, request, reply });
+      return await me({ fastify, request, reply });
+    },
+  );
+
+  fastify.get(
+    "/sessions",
+    {
+      schema: {
+        tags,
+      },
+    },
+    async (request, reply) => {
+      return await listSessions({ fastify, request, reply });
     },
   );
 

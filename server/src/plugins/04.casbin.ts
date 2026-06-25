@@ -1,9 +1,10 @@
 import fastifyPlugin from "fastify-plugin";
-import { newEnforcer, newModelFromString } from "casbin";
+import casbin from "casbin";
 import DrizzleAdapterImport from "drizzle-adapter";
-import { casbinRule } from "@/shared/tables/casbin-rule";
+import { casbinRule } from "@starter/shared/tables";
 
 export default fastifyPlugin(async (fastify) => {
+  const { newEnforcer, newModelFromString } = casbin;
   const model = newModelFromString(`
   [request_definition]
   r = sub, obj, act

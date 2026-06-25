@@ -1,5 +1,5 @@
 import type { InsertTodoType } from "@starter/shared/schemas";
-import { todos } from "@/shared/tables/index";
+import { todos } from "@starter/shared/tables";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function createTodo({

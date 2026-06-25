@@ -1,4 +1,4 @@
-import { users } from "@starter/server/tables";
+import { users } from "@starter/shared/tables";
 import {
   createSelectSchema,
   createInsertSchema,
@@ -10,8 +10,9 @@ export const selectUserSchema = createSelectSchema(users, {
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
 export const insertUserSchema = createInsertSchema(users, {
-  email: z.email(),
+  email: z.string().email(),
   password: z
     .string()
     .min(8, "Minimum 8 characters")
@@ -24,6 +25,7 @@ export const insertUserSchema = createInsertSchema(users, {
   createdAt: true,
   updatedAt: true,
 });
+
 export const updateUserSchema = createUpdateSchema(users).omit({
   createdAt: true,
   updatedAt: true,

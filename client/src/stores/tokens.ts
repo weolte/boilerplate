@@ -9,12 +9,12 @@ export const useTokensStore = defineStore(
 
     const isAuthenticated = computed(() => !!accessToken.value)
 
-    function setTokens(tokens) {
+    function setTokens(tokens: { accessToken: string; refreshToken: string }) {
       accessToken.value = tokens.accessToken
       refreshToken.value = tokens.refreshToken
     }
 
-    function setAccessToken(token) {
+    function setAccessToken(token: string) {
       accessToken.value = token
     }
 

@@ -3,7 +3,6 @@ import { useNavStore } from '@/stores/nav';
 import DesktopNavItem from './DesktopNavItem.vue';
 
 const nav = useNavStore()
-nav
 </script>
 
 <template>

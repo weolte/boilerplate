@@ -1,7 +1,7 @@
 import fastifyPlugin from "fastify-plugin";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import * as dbSchema from "@/shared/tables/index";
+import * as dbSchema from "@starter/shared/tables";
 
 export default fastifyPlugin(async (fastify, options) => {
   const pool = new Pool({

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import MainLayout from '@/layouts/Main.vue'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -34,13 +33,11 @@ const chartOptions = ref({
 </script>
 
 <template>
-  <main class="h-full">
-    <h1>{{ t('message.hello') }}</h1>
+  <h1 class="text-2xl font-bold mb-4">{{ t('message.hello') }}</h1>
 
-    <button class="btn">PING</button>
+  <button class="btn">PING</button>
 
-    <div class="w-150">
-      <Bar :options="chartOptions" :data="chartData" />
-    </div>
-  </main>
+  <div class="w-150">
+    <Bar :options="chartOptions" :data="chartData" />
+  </div>
 </template>

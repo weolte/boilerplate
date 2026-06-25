@@ -1,4 +1,4 @@
-import { sessions } from "@starter/server/tables";
+import { sessions } from "@starter/shared/tables";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 

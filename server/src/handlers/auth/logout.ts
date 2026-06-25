@@ -1,5 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import * as arctic from "arctic";
+import { sessions } from "@starter/shared/tables";
+import { eq } from "drizzle-orm";
 
 export async function logout({
   authentik,
@@ -13,11 +15,18 @@ export async function logout({
   reply: FastifyReply;
 }) {
   const refreshToken = request.headers.authorization?.replace("Bearer ", "");
-  if (!refreshToken) return reply.status(400).send({ message: "Bad Request" });
+  const accessToken = request.headers["x-access-token"] as string | undefined;
+  if (!refreshToken || !accessToken)
+    return reply.status(400).send({ message: "Bad Request" });
   try {
     await authentik.revokeToken(refreshToken);
+
+    await fastify.db
+      .delete(sessions)
+      .where(eq(sessions.userToken, accessToken));
+
     return reply.status(204).send();
-  } catch (e) {
-    return reply.status(400).send({ message: "Unauthorized" });
+  } catch {
+    return reply.status(400).send({ message: "Logout failed" });
   }
 }

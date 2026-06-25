@@ -23,8 +23,8 @@ import "dotenv/config";
   fastify.setSerializerCompiler(serializerCompiler);
   await fastify.register(fastifyAutoload, {
     dir: path.join(import.meta.dirname, "routes"),
-    // autoHooks: true,
-    // cascadeHooks: true,
+    autoHooks: true,
+    cascadeHooks: true,
     options: {},
   });
 

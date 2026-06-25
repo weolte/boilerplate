@@ -43,7 +43,8 @@
     "skipLibCheck": true,
 
     "paths": {
-      "@/shared/*": ["./src/shared/*"]
+      "@/handlers/*": ["./src/handlers/*"],
+      "@/casbin/*": ["./src/casbin/*"]
     }
   },
   "include": ["env.d.ts", "src/**/*"]

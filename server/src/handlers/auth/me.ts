@@ -1,7 +1,7 @@
-import { users } from "@/shared/tables/users";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import * as arctic from "arctic";
 
-export async function getUsers({
+export async function me({
   fastify,
   request,
   reply,
@@ -10,6 +10,6 @@ export async function getUsers({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const result = await fastify.db.select().from(users);
-  return reply.send(result);
+  const user = request.user;
+  return reply.send(user);
 }

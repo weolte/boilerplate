@@ -3,7 +3,7 @@ import fastifyCookie from "@fastify/cookie";
 
 export default fastifyPlugin(async (fastify, options) => {
   await fastify.register(fastifyCookie, {
-    secret: "my-secret",
+    secret: process.env.COOKIE_SECRET || "change-me-in-production",
     hook: "onRequest",
     parseOptions: {},
   });

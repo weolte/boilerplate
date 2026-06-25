@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useTokensStore } from '@/stores/tokens'
+import { useUserStore } from '@/stores/user'
 
 const routes = [
   {
@@ -20,23 +21,48 @@ const routes = [
       {
         path: 'access',
         component: () => import('@/views/Access.vue'),
+        meta: {
+          requiresRole: 'admin',
+        },
+      },
+      {
+        path: 'sessions',
+        component: () => import('@/views/Sessions.vue'),
       },
     ],
   },
 
   {
     path: '/unauthenticated',
-    component: () => import('@/views/Unauthenticated.vue'),
+    component: () => import('@/layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/Unauthenticated.vue'),
+      },
+    ],
   },
 
   {
     path: '/unauthorized',
-    component: () => import('@/views/Unauthorized.vue'),
+    component: () => import('@/layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/Unauthorized.vue'),
+      },
+    ],
   },
 
   {
     path: '/:pathMatch(.*)*',
-    component: () => import('@/views/NotFound.vue'),
+    component: () => import('@/layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/NotFound.vue'),
+      },
+    ],
   },
 ]
 
@@ -45,16 +71,34 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   const tokensStore = useTokensStore()
+  const userStore = useUserStore()
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (requiresAuth && !tokensStore.isAuthenticated) {
     return {
+      path: '/unauthenticated',
       query: {
         redirect: to.fullPath,
       },
+    }
+  }
+
+  const requiresRole = to.matched.find((record) => record.meta.requiresRole)?.meta?.requiresRole as string | undefined
+
+  if (requiresRole) {
+    if (userStore.roles.length === 0) {
+      try {
+        await userStore.fetchRoles()
+      } catch {
+        return { path: '/unauthorized' }
+      }
+    }
+
+    if (!userStore.hasRole(requiresRole)) {
+      return { path: '/unauthorized' }
     }
   }
 

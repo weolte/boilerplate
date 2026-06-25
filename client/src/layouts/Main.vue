@@ -10,8 +10,10 @@ import { RouterView } from 'vue-router'
     <input id="drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <Header />
-      <div class="flex-1 bg-base-300">
-        <RouterView />
+      <div class="flex-1 bg-base-300 p-2">
+        <div class="container mx-auto">
+          <RouterView />
+        </div>
       </div>
       <Footer />
     </div>

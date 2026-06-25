@@ -1,4 +1,4 @@
-import { todos } from "@starter/server/tables";
+import { todos } from "@starter/shared/tables";
 import {
   createSelectSchema,
   createInsertSchema,
@@ -11,6 +11,7 @@ export const selectTodoSchema = createSelectSchema(todos, {
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
 export const insertTodoSchema = createInsertSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({
@@ -18,6 +19,7 @@ export const insertTodoSchema = createInsertSchema(todos, {
   createdAt: true,
   updatedAt: true,
 });
+
 export const updateTodoSchema = createUpdateSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({

@@ -11,7 +11,8 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
-} from "@/shared/handlers/todos/index";
+} from "@/handlers/todos/index";
+import { authorize } from "@/casbin/authorize";
 
 export default async function (
   fastify: FastifyInstance,
@@ -29,6 +30,7 @@ export default async function (
           200: z.array(selectTodoSchema),
         },
       },
+      preHandler: [authorize("todos", "read")],
     },
     async (request, reply) => {
       await getTodos({ fastify, request, reply });
@@ -51,6 +53,7 @@ export default async function (
           }),
         },
       },
+      preHandler: [authorize("todos", "read")],
     },
     async (request, reply) => {
       await getTodo({ fastify, request, reply });
@@ -68,6 +71,7 @@ export default async function (
           201: selectTodoSchema,
         },
       },
+      preHandler: [authorize("todos", "create")],
     },
     async (request, reply) => {
       await createTodo({ fastify, request, reply });
@@ -85,6 +89,7 @@ export default async function (
         }),
         body: updateTodoSchema.partial(),
       },
+      preHandler: [authorize("todos", "update")],
     },
     async (request, reply) => {
       await updateTodo({ fastify, request, reply });
@@ -101,6 +106,7 @@ export default async function (
           uuid: z.uuid(),
         }),
       },
+      preHandler: [authorize("todos", "delete")],
     },
     async (request, reply) => {
       await deleteTodo({ fastify, request, reply });

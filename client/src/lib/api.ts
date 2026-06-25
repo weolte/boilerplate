@@ -14,6 +14,7 @@ async function refreshAccessToken() {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokensStore.refreshToken}`,
+        'X-Access-Token': tokensStore.accessToken,
       },
     })
       .then(async (res) => {
