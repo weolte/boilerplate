@@ -7,7 +7,7 @@ import {
 import { v7 as uuidv7 } from "uuid";
 import { users } from "./users";
 
-export const sessions = pgTable("sessions", {
+export const devices = pgTable("devices", {
   uuid: uuid()
     .primaryKey()
     .$defaultFn(() => uuidv7()),

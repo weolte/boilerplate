@@ -7,17 +7,16 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="hero min-h-full">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h1 class="text-4xl font-bold">{{ t('unauthorized.title') }}</h1>
-        <p class="py-6 text-base-content/70">
-          {{ t('unauthorized.description') }}
-        </p>
-        <button class="btn btn-primary" @click="router.push('/')">
-          {{ t('unauthorized.goHome') }}
-        </button>
-      </div>
+  <div class="text-center">
+    <div class="max-w-md mx-auto">
+      <div class="text-8xl font-black text-base-content/10 tracking-tight">403</div>
+      <h1 class="text-3xl font-bold mt-2">{{ t('unauthorized.title') }}</h1>
+      <p class="text-base-content/60 mt-2 mb-8">
+        {{ t('unauthorized.description') }}
+      </p>
+      <button class="btn btn-primary" @click="router.push('/')">
+        {{ t('unauthorized.goHome') }}
+      </button>
     </div>
   </div>
 </template>

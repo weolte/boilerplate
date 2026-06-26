@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import type { MenuItem } from '@/stores/nav';
 import { useI18n } from 'vue-i18n'
 import { nextTick, ref } from 'vue';
 
 const { t } = useI18n()
+const route = useRoute()
 
 const openLeft = ref(false)
 
@@ -13,21 +14,20 @@ const props = defineProps<{
   level?: number
 }>()
 
+const isActive = () => props.item.to ? route.path === props.item.to : false
+
 const handleEnter = async (e: any) => {
   await nextTick()
-
   await new Promise(r => setTimeout(r, 30))
-
   const rect = e.target.getBoundingClientRect()
   const spaceRight = window.innerWidth - rect.right
-
   openLeft.value = spaceRight < 220
 }
 </script>
 
 <template>
   <li v-if="!item.children">
-    <RouterLink v-if="item.to" :to="item.to">
+    <RouterLink v-if="item.to" :to="item.to" :class="{ 'menu-active': isActive() }">
       {{ t(item.key) }}
     </RouterLink>
     <a v-else>{{ t(item.key) }}</a>
@@ -40,7 +40,7 @@ const handleEnter = async (e: any) => {
       : ''
   ]">
     <div tabindex="0" role="button">{{ t(item.key) }}</div>
-    <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm m-0">
+    <ul tabindex="-1" class="dropdown-content menu bg-base-100/90 backdrop-blur-lg rounded-box z-1 w-52 p-2 shadow-xl border border-base-300/30 m-0">
       <DesktopNavItem v-for="child in item.children" :item="child" :level="(level ?? 0) + 1" />
     </ul>
   </li>

@@ -1,4 +1,4 @@
 export * from "./casbin-rule";
-export * from "./sessions";
+export * from "./devices";
 export * from "./todos";
 export * from "./users";

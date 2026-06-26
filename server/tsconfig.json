@@ -35,7 +35,6 @@
 
     // Recommended Options
     "strict": true,
-    "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
@@ -44,7 +43,7 @@
 
     "paths": {
       "@/handlers/*": ["./src/handlers/*"],
-      "@/casbin/*": ["./src/casbin/*"]
+      "@/lib/*": ["./src/lib/*"]
     }
   },
   "include": ["env.d.ts", "src/**/*"]

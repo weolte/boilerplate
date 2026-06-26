@@ -10,11 +10,10 @@ async function refreshAccessToken() {
 
   if (!refreshPromise) {
     refreshPromise = fetch('/api/auth/refresh', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokensStore.refreshToken}`,
-        'X-Access-Token': tokensStore.accessToken,
       },
     })
       .then(async (res) => {
@@ -63,7 +62,7 @@ export const useApi = createFetch({
 
           return await ctx.execute()
         } catch {
-          router.push('/unauthenticated')
+          router.push('/login')
         }
       }
 

@@ -5,7 +5,7 @@ export default async function (
   options: Record<string, any>,
 ) {
   fastify.addHook("onRequest", async (request, reply) => {
-    const publicRoutes = ["/auth/login", "/auth/callback", "/auth/refresh", "/auth/logout"];
+    const publicRoutes = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"];
 
     if (
       publicRoutes.some(

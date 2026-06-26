@@ -8,17 +8,18 @@ export interface MenuItem {
 }
 
 export const useNavStore = defineStore('nav', () => {
-  const items = ref([
+  const items = ref<MenuItem[]>([
     { key: 'nav.home', to: '/' },
     { key: 'nav.todos', to: '/todos' },
     {
-      key: 'nav.routes',
+      key: 'nav.management',
       children: [
-        { key: 'nav.about', to: '/about' },
+        { key: 'nav.users', to: '/users' },
+        { key: 'nav.groups', to: '/groups' },
+        { key: 'nav.policies', to: '/policies' },
       ],
     },
-    { key: 'nav.access', to: '/access' },
-    { key: 'nav.sessions', to: '/sessions' },
+    { key: 'nav.devices', to: '/devices' },
   ])
 
   return { items }

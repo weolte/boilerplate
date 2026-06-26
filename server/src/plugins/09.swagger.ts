@@ -14,7 +14,7 @@ export default fastifyPlugin(async (fastify, options) => {
       },
       servers: [
         {
-          url: "https://devhr.navoiyuran.uz/api",
+          url: process.env.API_URL || "https://devhr.navoiyuran.uz/api",
         },
       ],
     },

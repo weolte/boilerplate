@@ -12,7 +12,7 @@ import {
   updateUser,
   deleteUser,
 } from "@/handlers/users/index";
-import { authorize } from "@/casbin/authorize";
+import { authorize } from "@/lib/authorize";
 
 export default async function (
   fastify: FastifyInstance,

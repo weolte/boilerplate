@@ -1,5 +1,4 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import * as arctic from "arctic";
 
 export async function me({
   fastify,

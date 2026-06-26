@@ -2,6 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useTokensStore } from '@/stores/tokens'
 import { useUserStore } from '@/stores/user'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean
+    requiresRole?: string
+    requiresAccess?: { resource: string; action: string }
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -19,6 +27,27 @@ const routes = [
         component: () => import('@/views/Todos.vue'),
       },
       {
+        path: 'users',
+        component: () => import('@/views/Users.vue'),
+        meta: {
+          requiresAccess: { resource: 'users', action: 'read' },
+        },
+      },
+      {
+        path: 'groups',
+        component: () => import('@/views/Groups.vue'),
+        meta: {
+          requiresAccess: { resource: 'casbin', action: 'read' },
+        },
+      },
+      {
+        path: 'policies',
+        component: () => import('@/views/Policies.vue'),
+        meta: {
+          requiresAccess: { resource: 'casbin', action: 'read' },
+        },
+      },
+      {
         path: 'access',
         component: () => import('@/views/Access.vue'),
         meta: {
@@ -26,19 +55,31 @@ const routes = [
         },
       },
       {
-        path: 'sessions',
-        component: () => import('@/views/Sessions.vue'),
+        path: 'devices',
+        component: () => import('@/views/Devices.vue'),
       },
     ],
   },
 
   {
-    path: '/unauthenticated',
+    path: '/login',
+    alias: '/unauthenticated',
     component: () => import('@/layouts/AuthLayout.vue'),
     children: [
       {
         path: '',
-        component: () => import('@/views/Unauthenticated.vue'),
+        component: () => import('@/views/Login.vue'),
+      },
+    ],
+  },
+
+  {
+    path: '/register',
+    component: () => import('@/layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/Register.vue'),
       },
     ],
   },
@@ -73,22 +114,42 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const tokensStore = useTokensStore()
-  const userStore = useUserStore()
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (requiresAuth && !tokensStore.isAuthenticated) {
     return {
-      path: '/unauthenticated',
+      path: '/login',
       query: {
         redirect: to.fullPath,
       },
     }
   }
 
-  const requiresRole = to.matched.find((record) => record.meta.requiresRole)?.meta?.requiresRole as string | undefined
+  const routeMeta = to.matched.find((record) => record.meta.requiresAccess || record.meta.requiresRole)?.meta
+  const requiresAccess = routeMeta?.requiresAccess
+  const requiresRole = routeMeta?.requiresRole
+
+  if (requiresAccess) {
+    try {
+      const res = await fetch('/api/casbin/enforce', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokensStore.accessToken}`,
+        },
+        body: JSON.stringify(requiresAccess),
+      })
+      if (!res.ok) return { path: '/unauthorized' }
+      const { allowed } = await res.json()
+      if (!allowed) return { path: '/unauthorized' }
+    } catch {
+      return { path: '/unauthorized' }
+    }
+  }
 
   if (requiresRole) {
+    const userStore = useUserStore()
     if (userStore.roles.length === 0) {
       try {
         await userStore.fetchRoles()

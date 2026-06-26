@@ -15,11 +15,10 @@ await esbuild.build({
   chunkNames: "chunks/[name]-[hash]",
   alias: {
     "@/handlers": "./src/handlers",
-    "@/casbin": "./src/casbin",
+    "@/lib": "./src/lib",
   },
   tsconfig: "tsconfig.json",
   external: [
-    "@fastify/auth",
     "@fastify/autoload",
     "@fastify/cookie",
     "@fastify/jwt",
@@ -31,7 +30,6 @@ await esbuild.build({
     "@graphql-tools/load",
     "@graphql-tools/schema",
     "@scalar/fastify-api-reference",
-    "arctic",
     "bcrypt",
     "casbin",
     "dotenv",
@@ -41,7 +39,6 @@ await esbuild.build({
     "fastify",
     "fastify-plugin",
     "fastify-type-provider-zod",
-    "get-jwks",
     "graphql",
     "mercurius",
     "pg",

@@ -12,7 +12,7 @@ import {
   updateTodo,
   deleteTodo,
 } from "@/handlers/todos/index";
-import { authorize } from "@/casbin/authorize";
+import { authorize } from "@/lib/authorize";
 
 export default async function (
   fastify: FastifyInstance,

@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { devices, users } from "@starter/shared/tables";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { accessExpiresIn, refreshExpiresIn } from "@starter/shared/constants";
 
-export async function login({
+export async function register({
   fastify,
   request,
   reply,
@@ -13,25 +13,35 @@ export async function login({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const { email, password } = request.body as Record<string, string>;
+  const { username, email, password } = request.body as Record<string, string>;
 
-  if (!email || !password)
-    return reply.status(400).send({ message: "Email and password required" });
+  if (!username || !email || !password)
+    return reply.status(400).send({ message: "Username, email, and password required" });
 
-  const [user] = await fastify.db
+  if (password.length < 8)
+    return reply.status(400).send({ message: "Password must be at least 8 characters" });
+
+  const [existing] = await fastify.db
     .select()
     .from(users)
-    .where(eq(users.email, email));
+    .where(or(eq(users.email, email), eq(users.username, username)));
 
-  if (!user)
-    return reply.status(401).send({ message: "Invalid credentials" });
+  if (existing) {
+    const field = existing.email === email ? "email" : "username";
+    return reply.status(409).send({ message: `A user with this ${field} already exists` });
+  }
 
-  if (!user.password)
-    return reply.status(401).send({ message: "Invalid credentials" });
+  const hash = await bcrypt.hash(password, 10);
 
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid)
-    return reply.status(401).send({ message: "Invalid credentials" });
+  const [user] = await fastify.db
+    .insert(users)
+    .values({
+      username,
+      email,
+      password: hash,
+      verified: false,
+    })
+    .returning();
 
   const ip = request.ip;
   const agent = request.headers["user-agent"] || "";
@@ -70,5 +80,5 @@ export async function login({
     .set({ userToken: accessToken })
     .where(eq(devices.uuid, device.uuid));
 
-  return reply.send({ accessToken, refreshToken });
+  return reply.status(201).send({ accessToken, refreshToken });
 }

@@ -1,25 +1,17 @@
 import type { FastifyInstance } from "fastify";
-import * as arctic from "arctic";
 import {
-  callback,
   refresh,
   logout,
   login,
+  register,
   me,
-  listSessions,
+  listDevices,
 } from "@/handlers/auth/index";
-
-const authentik = new arctic.Authentik(
-  String(process.env.OIDC_BASE_URL),
-  String(process.env.OIDC_PROVIDER_CLIENT),
-  String(process.env.OIDC_PROVIDER_SECRET),
-  String(process.env.OIDC_PROVIDER_CALLBACK),
-);
 
 export default async function (fastify: FastifyInstance) {
   const tags = ["auth"];
 
-  fastify.get(
+  fastify.post(
     "/login",
     {
       schema: {
@@ -27,23 +19,23 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      return await login({ authentik, fastify, request, reply });
+      return await login({ fastify, request, reply });
     },
   );
 
-  fastify.get(
-    "/callback",
+  fastify.post(
+    "/register",
     {
       schema: {
         tags,
       },
     },
     async (request, reply) => {
-      return await callback({ authentik, fastify, request, reply });
+      return await register({ fastify, request, reply });
     },
   );
 
-  fastify.get(
+  fastify.post(
     "/refresh",
     {
       schema: {
@@ -51,7 +43,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      return await refresh({ authentik, fastify, request, reply });
+      return await refresh({ fastify, request, reply });
     },
   );
 
@@ -68,18 +60,18 @@ export default async function (fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/sessions",
+    "/devices",
     {
       schema: {
         tags,
       },
     },
     async (request, reply) => {
-      return await listSessions({ fastify, request, reply });
+      return await listDevices({ fastify, request, reply });
     },
   );
 
-  fastify.get(
+  fastify.post(
     "/logout",
     {
       schema: {
@@ -87,7 +79,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      return await logout({ authentik, fastify, request, reply });
+      return await logout({ fastify, request, reply });
     },
   );
 }
