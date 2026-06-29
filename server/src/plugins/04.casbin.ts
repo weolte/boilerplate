@@ -1,5 +1,5 @@
 import fastifyPlugin from "fastify-plugin";
-import casbin from "casbin";
+import * as casbin from "casbin";
 import DrizzleAdapterImport from "drizzle-adapter";
 import { casbinRule } from "@starter/shared/tables";
 
