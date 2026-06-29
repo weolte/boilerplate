@@ -70,7 +70,7 @@ const routes = [
   {
     path: '/login',
     alias: '/unauthenticated',
-    component: () => import('@/layouts/AuthLayout.vue'),
+    component: () => import('@/layouts/Auth.vue'),
     children: [
       {
         path: '',
@@ -81,7 +81,7 @@ const routes = [
 
   {
     path: '/register',
-    component: () => import('@/layouts/AuthLayout.vue'),
+    component: () => import('@/layouts/Auth.vue'),
     children: [
       {
         path: '',
@@ -92,7 +92,7 @@ const routes = [
 
   {
     path: '/unauthorized',
-    component: () => import('@/layouts/AuthLayout.vue'),
+    component: () => import('@/layouts/Auth.vue'),
     children: [
       {
         path: '',
@@ -103,7 +103,7 @@ const routes = [
 
   {
     path: '/:pathMatch(.*)*',
-    component: () => import('@/layouts/AuthLayout.vue'),
+    component: () => import('@/layouts/Auth.vue'),
     children: [
       {
         path: '',
