@@ -12,3 +12,19 @@ export function authorize(resource: string, action: string) {
     if (!allowed) return reply.status(403).send({ message: "Forbidden" });
   };
 }
+
+export function authorizeRecord(resource: string, action: string) {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = request.user as any;
+    if (!user) return reply.status(401).send({ message: "Unauthorized" });
+
+    const sub = user.sub || user.email || user.preferred_username;
+    if (!sub) return reply.status(401).send({ message: "Unauthorized" });
+
+    const params = request.params as { uuid?: string };
+    const obj = params.uuid ? `${resource}/${params.uuid}` : resource;
+
+    const allowed = await request.server.casbin.enforce(sub, obj, action);
+    if (!allowed) return reply.status(403).send({ message: "Forbidden" });
+  };
+}

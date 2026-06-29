@@ -25,6 +25,9 @@ const routes = [
       {
         path: 'todos',
         component: () => import('@/views/Todos.vue'),
+        meta: {
+          requiresAccess: { resource: 'todos', action: 'read' },
+        },
       },
       {
         path: 'users',
@@ -57,6 +60,9 @@ const routes = [
       {
         path: 'devices',
         component: () => import('@/views/Devices.vue'),
+        meta: {
+          requiresAccess: { resource: 'devices', action: 'read' },
+        },
       },
     ],
   },

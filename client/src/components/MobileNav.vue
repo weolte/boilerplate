@@ -23,7 +23,7 @@ function closeDrawer() {
       </label>
     </div>
     <ul class="menu p-2 gap-1 flex-1">
-      <MobileNavItem v-for="navItem in nav.items" :key="navItem.key" :item="navItem" @close="closeDrawer" />
+      <MobileNavItem v-for="navItem in nav.visibleItems" :key="navItem.key" :item="navItem" @close="closeDrawer" />
     </ul>
   </div>
 </template>

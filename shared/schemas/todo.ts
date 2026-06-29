@@ -16,6 +16,7 @@ export const insertTodoSchema = createInsertSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({
   uuid: true,
+  userUuid: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -23,6 +24,8 @@ export const insertTodoSchema = createInsertSchema(todos, {
 export const updateTodoSchema = createUpdateSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({
+  uuid: true,
+  userUuid: true,
   createdAt: true,
   updatedAt: true,
 });

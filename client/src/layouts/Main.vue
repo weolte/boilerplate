@@ -2,7 +2,15 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import MobileNav from '@/components/MobileNav.vue';
+import { useNavStore } from '@/stores/nav';
 import { RouterView } from 'vue-router'
+import { onMounted } from 'vue'
+
+const nav = useNavStore()
+
+onMounted(() => {
+  nav.loadPermissions()
+})
 </script>
 
 <template>

@@ -1,5 +1,6 @@
 import { todos } from "@starter/shared/tables";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { eq } from "drizzle-orm";
 
 export async function getTodos({
   fastify,
@@ -10,6 +11,11 @@ export async function getTodos({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
-  const result = await fastify.db.select().from(todos);
+  const user = request.user as any;
+  const userUuid = user?.sub;
+  const result = await fastify.db
+    .select()
+    .from(todos)
+    .where(eq(todos.userUuid, userUuid));
   return reply.send(result);
 }

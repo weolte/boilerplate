@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 import type { FastifyInstance } from "fastify";
+import { authorize } from "@/lib/authorize";
 
 export default async function (
   fastify: FastifyInstance,
@@ -16,6 +17,7 @@ export default async function (
           role: z.string(),
         }),
       },
+      preHandler: [authorize("casbin", "read")],
     },
     async (request, reply) => {
       const { role } = request.params as { role: string };
@@ -64,6 +66,7 @@ export default async function (
           role: z.string(),
         }),
       },
+      preHandler: [authorize("casbin", "write")],
     },
     async (request, reply) => {
       const { user, role } = request.body as any;
@@ -95,6 +98,7 @@ export default async function (
           role: z.string(),
         }),
       },
+      preHandler: [authorize("casbin", "write")],
     },
     async (request, reply) => {
       const { user, role } = request.body as any;
@@ -140,6 +144,7 @@ export default async function (
       schema: {
         tags,
       },
+      preHandler: [authorize("casbin", "read")],
     },
     async (request, reply) => {
       const policies = await fastify.casbin.getPolicy();
@@ -159,6 +164,7 @@ export default async function (
           act: z.string(),
         }),
       },
+      preHandler: [authorize("casbin", "write")],
     },
     async (request, reply) => {
       const { sub, obj, act } = request.body as any;
@@ -180,6 +186,7 @@ export default async function (
           act: z.string(),
         }),
       },
+      preHandler: [authorize("casbin", "write")],
     },
     async (request, reply) => {
       const { sub, obj, act } = request.body as any;

@@ -11,7 +11,12 @@ export async function createTodo({
   request: FastifyRequest;
   reply: FastifyReply;
 }) {
+  const user = request.user as any;
+  const userUuid = user?.sub;
   const body = request.body as InsertTodoType;
-  const [result] = await fastify.db.insert(todos).values(body).returning();
+  const [result] = await fastify.db
+    .insert(todos)
+    .values({ ...body, userUuid })
+    .returning();
   return reply.code(201).send(result);
 }

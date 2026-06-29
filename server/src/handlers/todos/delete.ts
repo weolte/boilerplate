@@ -12,12 +12,17 @@ export async function deleteTodo({
   reply: FastifyReply;
 }) {
   const { uuid } = request.params as { uuid: string };
+  const user = request.user as any;
+  const userUuid = user?.sub;
 
   const [result] = await fastify.db
     .select()
     .from(todos)
     .where(eq(todos.uuid, uuid));
+
   if (!result) return reply.code(404).send({ message: "Not found" });
+  if (result.userUuid !== userUuid)
+    return reply.code(403).send({ message: "Forbidden" });
 
   await fastify.db.delete(todos).where(eq(todos.uuid, result.uuid));
 

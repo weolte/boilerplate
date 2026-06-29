@@ -7,6 +7,6 @@ const nav = useNavStore()
 
 <template>
   <ul class="menu menu-horizontal p-0">
-    <DesktopNavItem v-for="navItem in nav.items" :item="navItem" />
+    <DesktopNavItem v-for="navItem in nav.visibleItems" :item="navItem" />
   </ul>
 </template>
