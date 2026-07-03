@@ -5,14 +5,21 @@ export default async function (
   options: Record<string, any>,
 ) {
   fastify.addHook("onRequest", async (request, reply) => {
-    // const publicRoutes = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"];
-    // if (
-    //   publicRoutes.some(
-    //     (publicRoute) => publicRoute === request.url.split("?")[0]!,
-    //   )
-    // ) {
-    //   return;
-    // }
-    // return await request.jwtVerify();
+    const publicRoutes = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/refresh",
+      "/auth/logout",
+    ];
+
+    if (
+      publicRoutes.some(
+        (publicRoute) => publicRoute === request.url.split("?")[0]!,
+      )
+    ) {
+      return;
+    }
+
+    return await request.jwtVerify();
   });
 }

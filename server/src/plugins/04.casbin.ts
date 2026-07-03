@@ -20,7 +20,7 @@ export default fastifyPlugin(async (fastify) => {
   e = some(where (p.eft == allow))
 
   [matchers]
-  m = g(r.sub, r.obj, p.role) && g2(r.obj, p.obj_type) && r.act == p.act
+  m = (p.role == "any" || g(r.sub, r.obj, p.role)) && g2(r.obj, p.obj_type) && r.act == p.act
   `);
 
   const DrizzleAdapter =

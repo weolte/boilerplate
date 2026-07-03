@@ -28,26 +28,7 @@ export default fastifyPlugin(async (fastify) => {
     mutation: new GraphQLObjectType({
       name: "Mutation",
       fields: {
-        insertTodo: {
-          ...entities.mutations.insertIntoTodosSingle,
-          resolve: async (parent, args, context, info) => {
-            const todo = await entities.mutations.insertIntoTodosSingle.resolve(
-              parent,
-              args,
-              context,
-              info,
-            );
-
-            await context.pubsub.publish({
-              topic: "TODO_ADDED",
-              payload: {
-                todoAdded: todo,
-              },
-            });
-
-            return todo;
-          },
-        },
+        ...entities.mutations,
       },
     }),
     subscription: new GraphQLObjectType({

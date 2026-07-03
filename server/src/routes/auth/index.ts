@@ -1,3 +1,4 @@
+import { z } from "zod/v4";
 import type { FastifyInstance } from "fastify";
 import {
   refresh,
@@ -16,6 +17,10 @@ export default async function (fastify: FastifyInstance) {
     {
       schema: {
         tags,
+        body: z.object({
+          email: z.email(),
+          password: z.string(),
+        }),
       },
     },
     async (request, reply) => {
