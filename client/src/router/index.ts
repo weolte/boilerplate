@@ -132,7 +132,9 @@ router.beforeEach(async (to) => {
     }
   }
 
-  const routeMeta = to.matched.find((record) => record.meta.requiresAccess || record.meta.requiresRole)?.meta
+  const routeMeta = to.matched.find(
+    (record) => record.meta.requiresAccess || record.meta.requiresRole,
+  )?.meta
   const requiresAccess = routeMeta?.requiresAccess
   const requiresRole = routeMeta?.requiresRole
 

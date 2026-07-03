@@ -35,7 +35,6 @@
     "@graphql-tools/schema": "^10.0.33",
     "@scalar/fastify-api-reference": "^1.52.2",
     "@starter/shared": "*",
-
     "bcrypt": "^6.0.0",
     "casbin": "^5.50.0",
     "dotenv": "^17.4.2",

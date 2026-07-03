@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LocaleSwitcher from './LocaleSwitcher.vue'
 import ThemeSwitcher from './ThemeSwitcher.vue'
-import DesktopNav from './DesktopNav.vue';
+import DesktopNav from './DesktopNav.vue'
 import { useTokensStore } from '@/stores/tokens'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -26,13 +26,23 @@ async function logout() {
 </script>
 
 <template>
-  <header class="navbar bg-base-100/70 backdrop-blur-lg border-b border-base-300/30 fixed top-0 z-30 w-full">
+  <header class="navbar bg-base-100 fixed top-0 z-30">
     <div class="container mx-auto flex items-center gap-2">
       <div class="flex-none lg:hidden">
         <label for="drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
           </svg>
         </label>
       </div>
@@ -43,11 +53,24 @@ async function logout() {
       <div class="flex-1" />
       <ThemeSwitcher />
       <LocaleSwitcher />
-      <button class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Logout" @click="logout">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+      <button
+        class="btn btn-ghost btn-square tooltip tooltip-bottom tooltip-end"
+        data-tip="Logout"
+        @click="logout"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+          />
         </svg>
       </button>
     </div>

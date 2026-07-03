@@ -12,11 +12,7 @@ export default fastifyPlugin(async (fastify, options) => {
         description: "Testing the Fastify swagger API",
         version: "0.1.0",
       },
-      servers: [
-        {
-          url: process.env.API_URL || "https://devhr.navoiyuran.uz/api",
-        },
-      ],
+      servers: [],
     },
     transform: jsonSchemaTransform,
   });

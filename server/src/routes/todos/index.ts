@@ -12,7 +12,7 @@ import {
   updateTodo,
   deleteTodo,
 } from "@/handlers/todos/index";
-import { authorize, authorizeRecord } from "@/lib/authorize";
+import { authorize } from "@/lib/authorize";
 
 export default async function (
   fastify: FastifyInstance,
@@ -53,7 +53,7 @@ export default async function (
           }),
         },
       },
-      preHandler: [authorizeRecord("todos", "read")],
+      preHandler: [authorize("todos", "read")],
     },
     async (request, reply) => {
       await getTodo({ fastify, request, reply });
@@ -89,7 +89,7 @@ export default async function (
         }),
         body: updateTodoSchema.partial(),
       },
-      preHandler: [authorizeRecord("todos", "update")],
+      preHandler: [authorize("todos", "update")],
     },
     async (request, reply) => {
       await updateTodo({ fastify, request, reply });
@@ -106,7 +106,7 @@ export default async function (
           uuid: z.uuid(),
         }),
       },
-      preHandler: [authorizeRecord("todos", "delete")],
+      preHandler: [authorize("todos", "delete")],
     },
     async (request, reply) => {
       await deleteTodo({ fastify, request, reply });

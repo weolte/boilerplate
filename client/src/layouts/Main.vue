@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import MobileNav from '@/components/MobileNav.vue';
-import { useNavStore } from '@/stores/nav';
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+import MobileNav from '@/components/MobileNav.vue'
+import { useNavStore } from '@/stores/nav'
 import { RouterView } from 'vue-router'
 import { onMounted } from 'vue'
 
@@ -19,7 +19,7 @@ onMounted(() => {
     <div class="drawer-content flex flex-col">
       <Header />
       <div class="h-16 shrink-0"></div>
-      <main class="flex-1 bg-linear-to-br from-base-200 to-base-300 p-4 md:p-6">
+      <main class="bg-base-200 flex-1 p-2">
         <div class="container mx-auto">
           <RouterView />
         </div>

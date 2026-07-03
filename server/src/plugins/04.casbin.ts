@@ -10,16 +10,17 @@ export default fastifyPlugin(async (fastify) => {
   r = sub, obj, act
 
   [policy_definition]
-  p = sub, obj, act
+  p = role, obj_type, act
 
   [role_definition]
-  g = _, _
+  g = _, _, _
+  g2 = _, _
 
   [policy_effect]
   e = some(where (p.eft == allow))
 
   [matchers]
-  m = g(r.sub, p.sub) && (p.obj == "*" || keyMatch(r.obj, p.obj)) && (p.act == "*" || r.act == p.act)
+  m = g(r.sub, r.obj, p.role) && g2(r.obj, p.obj_type) && r.act == p.act
   `);
 
   const DrizzleAdapter =
@@ -31,6 +32,7 @@ export default fastifyPlugin(async (fastify) => {
   });
 
   const enforcer = await newEnforcer(model, adapter);
+
   await enforcer.loadPolicy();
 
   fastify.decorate("casbin", enforcer);

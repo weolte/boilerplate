@@ -8,16 +8,16 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-screen bg-linear-to-br from-base-200 via-base-300 to-base-200 flex flex-col">
-    <header class="navbar bg-base-100/50 backdrop-blur-md w-full border-b border-base-300/50">
-      <div class="container mx-auto flex items-center gap-2 px-4">
+  <div class="min-h-screen flex flex-col">
+    <header class="navbar bg-base-100 w-full">
+      <div class="container mx-auto flex items-center gap-2">
         <button class="btn btn-ghost text-lg font-semibold">{{ t('logo') }}</button>
         <div class="flex-1" />
         <ThemeSwitcher />
         <LocaleSwitcher />
       </div>
     </header>
-    <div class="flex-1 flex items-center justify-center p-4">
+    <div class="flex-1 flex items-center justify-center p-2">
       <RouterView />
     </div>
   </div>
