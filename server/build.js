@@ -31,7 +31,6 @@ await esbuild.build({
     "@graphql-tools/schema",
     "@scalar/fastify-api-reference",
     "bcrypt",
-    "casbin",
     "dotenv",
     "drizzle-adapter",
     "drizzle-graphql",

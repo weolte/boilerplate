@@ -12,7 +12,7 @@ export const selectUserSchema = createSelectSchema(users, {
 });
 
 export const insertUserSchema = createInsertSchema(users, {
-  email: z.string().email(),
+  email: z.email(),
   password: z
     .string()
     .min(8, "Minimum 8 characters")

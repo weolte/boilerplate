@@ -21,24 +21,15 @@ export default fastifyPlugin(async (fastify) => {
   const schemaFromScript = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: "Query",
-      fields: {
-        ...entities.queries,
-      },
+      fields: {},
     }),
     mutation: new GraphQLObjectType({
       name: "Mutation",
-      fields: {
-        ...entities.mutations,
-      },
+      fields: {},
     }),
     subscription: new GraphQLObjectType({
       name: "Subscription",
-      fields: {
-        todoAdded: {
-          type: entities.types.TodosItem,
-          subscribe: (_, __, { pubsub }) => pubsub.subscribe("TODO_ADDED"),
-        },
-      },
+      fields: {},
     }),
   });
 

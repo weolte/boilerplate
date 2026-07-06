@@ -6,9 +6,8 @@ export const todos = pgTable("todos", {
   uuid: uuid()
     .primaryKey()
     .$defaultFn(() => uuidv7()),
-  userUuid: uuid("user_uuid")
-    .references(() => users.uuid),
   text: varchar().notNull(),
+  createdBy: uuid("created_by").references(() => users.uuid),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

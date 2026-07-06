@@ -1,25 +1,29 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyRequest } from "fastify";
 
 export default async function (
   fastify: FastifyInstance,
-  options: Record<string, any>,
+  _options: Record<string, unknown>,
 ) {
-  fastify.addHook("onRequest", async (request, reply) => {
-    const publicRoutes = [
-      "/auth/login",
-      "/auth/register",
-      "/auth/refresh",
-      "/auth/logout",
-    ];
+  const publicRoutes = ["/auth/login", "/auth/register", "/public/*"];
 
-    if (
-      publicRoutes.some(
-        (publicRoute) => publicRoute === request.url.split("?")[0]!,
-      )
-    ) {
+  function isPublicRoute(request: FastifyRequest): boolean {
+    const path = request.url.split("?")[0] ?? "";
+
+    return publicRoutes.some((route) => {
+      if (route.endsWith("/*")) {
+        const prefix = route.slice(0, -1);
+        return path.startsWith(prefix);
+      }
+
+      return route === path;
+    });
+  }
+
+  fastify.addHook("onRequest", async (request) => {
+    if (isPublicRoute(request)) {
       return;
     }
 
-    return await request.jwtVerify();
+    await request.jwtVerify();
   });
 }
