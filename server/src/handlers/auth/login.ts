@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { devices, users } from "@starter/shared/tables";
 import { eq } from "drizzle-orm";
-import { accessExpiresIn, refreshExpiresIn } from "@starter/shared/constants";
+import { accessExpiresIn } from "@starter/shared/constants";
 
 export async function login({
   fastify,
@@ -23,15 +23,13 @@ export async function login({
     .from(users)
     .where(eq(users.email, email));
 
-  if (!user)
-    return reply.status(401).send({ message: "Invalid credentials" });
+  if (!user) return reply.status(401).send({ message: "Invalid credentials" });
 
   if (!user.password)
     return reply.status(401).send({ message: "Invalid credentials" });
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid)
-    return reply.status(401).send({ message: "Invalid credentials" });
+  if (!valid) return reply.status(401).send({ message: "Invalid credentials" });
 
   const ip = request.ip;
   const agent = request.headers["user-agent"] || "";
@@ -46,6 +44,9 @@ export async function login({
     })
     .returning();
 
+  if (!device)
+    return reply.status(500).send({ message: "Failed to create device" });
+
   const accessToken = fastify.jwt.sign(
     {
       sub: user.uuid,
@@ -56,19 +57,10 @@ export async function login({
     { expiresIn: accessExpiresIn },
   );
 
-  const refreshToken = fastify.jwt.sign(
-    {
-      sub: user.uuid,
-      jti: device.uuid,
-      type: "refresh",
-    },
-    { expiresIn: refreshExpiresIn },
-  );
-
   await fastify.db
     .update(devices)
     .set({ userToken: accessToken })
     .where(eq(devices.uuid, device.uuid));
 
-  return reply.send({ accessToken, refreshToken });
+  return reply.send({ accessToken });
 }

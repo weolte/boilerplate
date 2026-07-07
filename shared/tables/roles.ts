@@ -1,5 +1,6 @@
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
+import { users } from "./index";
 
 export const roles = pgTable("roles", {
   uuid: uuid()
@@ -11,3 +12,16 @@ export const roles = pgTable("roles", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+export const usersRoles = pgTable(
+  "users_roles",
+  {
+    userUuid: uuid("user_uuid")
+      .notNull()
+      .references(() => users.uuid),
+    roleUuid: uuid("role_uuid")
+      .notNull()
+      .references(() => roles.uuid),
+  },
+  (table) => [unique("user_role_unique").on(table.userUuid, table.roleUuid)],
+);

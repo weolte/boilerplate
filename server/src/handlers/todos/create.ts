@@ -16,7 +16,7 @@ export async function createTodo({
   const body = request.body as InsertTodoType;
   const [result] = await fastify.db
     .insert(todos)
-    .values({ ...body, userUuid })
+    .values({ ...body, createdBy: userUuid })
     .returning();
   return reply.code(201).send(result);
 }

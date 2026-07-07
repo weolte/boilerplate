@@ -5,9 +5,11 @@ import {
   createUpdateSchema,
 } from "drizzle-zod";
 import { z } from "zod/v4";
+import { v7 as uuidv7 } from "uuid";
 
 export const selectTodoSchema = createSelectSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
+  createdBy: (schema) => schema.default(uuidv7()),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -16,7 +18,7 @@ export const insertTodoSchema = createInsertSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({
   uuid: true,
-  userUuid: true,
+  createdBy: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -25,7 +27,7 @@ export const updateTodoSchema = createUpdateSchema(todos, {
   text: (schema) => schema.default("Buy groceries and fruits"),
 }).omit({
   uuid: true,
-  userUuid: true,
+  createdBy: true,
   createdAt: true,
   updatedAt: true,
 });

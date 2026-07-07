@@ -7,11 +7,16 @@ import {
 } from "@starter/shared/schemas";
 import {
   getTodos,
+  getOwnTodos,
   getTodo,
+  getOwnTodo,
   createTodo,
+  updateOwnTodo,
   updateTodo,
   deleteTodo,
+  deleteOwnTodo,
 } from "@/handlers/todos/index";
+import { authorize } from "@/lib/authorize";
 
 export default async function (
   fastify: FastifyInstance,
@@ -29,9 +34,13 @@ export default async function (
           200: z.array(selectTodoSchema),
         },
       },
+      preHandler: [authorize(fastify, ["admin"], true)],
     },
     async (request, reply) => {
-      await getTodos({ fastify, request, reply });
+      if (request.additional) {
+        return await getOwnTodos({ fastify, request, reply });
+      }
+      return await getTodos({ fastify, request, reply });
     },
   );
 
@@ -51,8 +60,12 @@ export default async function (
           }),
         },
       },
+      preHandler: [authorize(fastify, ["admin"], true)],
     },
     async (request, reply) => {
+      if (request.additional) {
+        return await getOwnTodo({ fastify, request, reply });
+      }
       await getTodo({ fastify, request, reply });
     },
   );
@@ -68,6 +81,7 @@ export default async function (
           201: selectTodoSchema,
         },
       },
+      preHandler: [authorize(fastify, ["admin", "user"])],
     },
     async (request, reply) => {
       await createTodo({ fastify, request, reply });
@@ -85,8 +99,12 @@ export default async function (
         }),
         body: updateTodoSchema.partial(),
       },
+      preHandler: [authorize(fastify, ["admin"], true)],
     },
     async (request, reply) => {
+      if (request.additional) {
+        return await updateOwnTodo({ fastify, request, reply });
+      }
       await updateTodo({ fastify, request, reply });
     },
   );
@@ -101,8 +119,12 @@ export default async function (
           uuid: z.uuid(),
         }),
       },
+      preHandler: [authorize(fastify, ["admin"], true)],
     },
     async (request, reply) => {
+      if (request.additional) {
+        return await deleteOwnTodo({ fastify, request, reply });
+      }
       await deleteTodo({ fastify, request, reply });
     },
   );

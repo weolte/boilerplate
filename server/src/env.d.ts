@@ -9,4 +9,8 @@ declare module "fastify" {
     db: NodePgDatabase<typeof dbSchema>;
     casbin: Enforcer;
   }
+
+  interface FastifyRequest {
+    additional?: boolean;
+  }
 }

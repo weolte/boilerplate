@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { devices, users } from "@starter/shared/tables";
 import { eq, or } from "drizzle-orm";
-import { accessExpiresIn, refreshExpiresIn } from "@starter/shared/constants";
+import { accessExpiresIn } from "@starter/shared/constants";
 
 export async function register({
   fastify,
@@ -16,10 +16,14 @@ export async function register({
   const { username, email, password } = request.body as Record<string, string>;
 
   if (!username || !email || !password)
-    return reply.status(400).send({ message: "Username, email, and password required" });
+    return reply
+      .status(400)
+      .send({ message: "Username, email, and password required" });
 
   if (password.length < 8)
-    return reply.status(400).send({ message: "Password must be at least 8 characters" });
+    return reply
+      .status(400)
+      .send({ message: "Password must be at least 8 characters" });
 
   const [existing] = await fastify.db
     .select()
@@ -28,7 +32,9 @@ export async function register({
 
   if (existing) {
     const field = existing.email === email ? "email" : "username";
-    return reply.status(409).send({ message: `A user with this ${field} already exists` });
+    return reply
+      .status(409)
+      .send({ message: `A user with this ${field} already exists` });
   }
 
   const hash = await bcrypt.hash(password, 10);
@@ -43,6 +49,9 @@ export async function register({
     })
     .returning();
 
+  if (!user)
+    return reply.status(500).send({ message: "Failed to create user" });
+
   const ip = request.ip;
   const agent = request.headers["user-agent"] || "";
 
@@ -56,6 +65,9 @@ export async function register({
     })
     .returning();
 
+  if (!device)
+    return reply.status(500).send({ message: "Failed to create device" });
+
   const accessToken = fastify.jwt.sign(
     {
       sub: user.uuid,
@@ -66,19 +78,10 @@ export async function register({
     { expiresIn: accessExpiresIn },
   );
 
-  const refreshToken = fastify.jwt.sign(
-    {
-      sub: user.uuid,
-      jti: device.uuid,
-      type: "refresh",
-    },
-    { expiresIn: refreshExpiresIn },
-  );
-
   await fastify.db
     .update(devices)
     .set({ userToken: accessToken })
     .where(eq(devices.uuid, device.uuid));
 
-  return reply.status(201).send({ accessToken, refreshToken });
+  return reply.status(201).send({ accessToken });
 }

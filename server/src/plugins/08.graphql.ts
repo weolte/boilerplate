@@ -19,18 +19,24 @@ export default fastifyPlugin(async (fastify) => {
 
   // * Must separate operations
   const schemaFromScript = new GraphQLSchema({
-    query: new GraphQLObjectType({
-      name: "Query",
-      fields: {},
-    }),
-    mutation: new GraphQLObjectType({
-      name: "Mutation",
-      fields: {},
-    }),
-    subscription: new GraphQLObjectType({
-      name: "Subscription",
-      fields: {},
-    }),
+    // query: new GraphQLObjectType({
+    //   name: "Query",
+    //   fields: {
+    //     ...entities.queries,
+    //   },
+    // }),
+    // mutation: new GraphQLObjectType({
+    //   name: "Mutation",
+    //   fields: {
+    //     ...entities.mutations,
+    //   },
+    // }),
+    // subscription: new GraphQLObjectType({
+    //   name: "Subscription",
+    //   fields: {
+    //     ...entities.subscriptions,
+    //   },
+    // }),
   });
 
   const schema = mergeSchemas({

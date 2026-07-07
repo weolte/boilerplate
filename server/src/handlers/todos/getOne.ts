@@ -1,6 +1,29 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { todos } from "@starter/shared/tables";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+
+export async function getOwnTodo({
+  fastify,
+  request,
+  reply,
+}: {
+  fastify: FastifyInstance;
+  request: FastifyRequest;
+  reply: FastifyReply;
+}) {
+  const { uuid } = request.params as { uuid: string };
+
+  const user = request.user as any;
+  const userUuid = user?.sub;
+
+  const [result] = await fastify.db
+    .select()
+    .from(todos)
+    .where(and(eq(todos.uuid, uuid), eq(todos.createdBy, userUuid)));
+
+  if (!result) return reply.code(404).send({ message: "Not found" });
+  return reply.send(result);
+}
 
 export async function getTodo({
   fastify,

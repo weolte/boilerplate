@@ -1,38 +1,36 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 
-export const useTokensStore = defineStore(
-  'tokens',
+export const useAccessTokenStore = defineStore(
+  'accessToken',
   () => {
-    const accessToken = ref('')
-    const refreshToken = ref('')
+    const token = ref('')
 
-    const isAuthenticated = computed(() => !!accessToken.value)
+    const isAuthenticated = computed(() => !!token.value)
 
-    function setTokens(tokens: { accessToken: string; refreshToken: string }) {
-      accessToken.value = tokens.accessToken
-      refreshToken.value = tokens.refreshToken
+    function set(newToken: string) {
+      token.value = newToken
     }
 
-    function setAccessToken(token: string) {
-      accessToken.value = token
-    }
-
-    function clearTokens() {
-      accessToken.value = ''
-      refreshToken.value = ''
+    function clear() {
+      token.value = ''
     }
 
     return {
-      accessToken,
-      refreshToken,
+      token,
       isAuthenticated,
-      setTokens,
-      setAccessToken,
-      clearTokens,
+      set,
+      clear,
     }
   },
   {
-    persist: true,
+    persist: {
+      serializer: {
+        serialize: (value) => value.token,
+        deserialize: (value) => ({
+          token: value,
+        }),
+      },
+    },
   },
 )

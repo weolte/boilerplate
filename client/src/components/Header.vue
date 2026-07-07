@@ -2,12 +2,12 @@
 import LocaleSwitcher from './LocaleSwitcher.vue'
 import ThemeSwitcher from './ThemeSwitcher.vue'
 import DesktopNav from './DesktopNav.vue'
-import { useTokensStore } from '@/stores/tokens'
+import { useAccessTokenStore } from '@/stores/tokens'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const tokensStore = useTokensStore()
+const tokensStore = useAccessTokenStore()
 const router = useRouter()
 
 async function logout() {
@@ -15,11 +15,11 @@ async function logout() {
     await fetch('/api/auth/logout', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${tokensStore.refreshToken}`,
+        Authorization: `Bearer ${tokensStore.token}`,
       },
     })
   } finally {
-    tokensStore.clearTokens()
+    tokensStore.clear()
     router.replace('/login')
   }
 }

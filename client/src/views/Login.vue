@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useTokensStore } from '@/stores/tokens'
+import { useAccessTokenStore } from '@/stores/tokens'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
-const tokensStore = useTokensStore()
+const accessTokenStore = useAccessTokenStore()
 
 const email = ref('')
 const password = ref('')
@@ -33,9 +33,9 @@ async function login() {
       return
     }
 
-    const { accessToken, refreshToken } = await res.json()
+    const { accessToken } = await res.json()
 
-    tokensStore.setTokens({ accessToken, refreshToken })
+    accessTokenStore.set(accessToken)
 
     const redirect = route.query.redirect || '/'
     router.replace(String(redirect))
@@ -89,7 +89,9 @@ async function login() {
 
         <p class="text-center text-sm text-base-content/50 mt-4">
           {{ t('auth.noAccount') }}
-          <RouterLink to="/register" class="link link-primary font-medium">{{ t('auth.createAccount') }}</RouterLink>
+          <RouterLink to="/register" class="link link-primary font-medium">{{
+            t('auth.createAccount')
+          }}</RouterLink>
         </p>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { usePermission } from '@/composables/usePermission'
 
 export interface MenuItem {
   key: string
@@ -27,30 +26,6 @@ export const useNavStore = defineStore('nav', () => {
 
   const permissionCache = ref<Record<string, boolean>>({})
 
-  async function checkItem(item: MenuItem): Promise<boolean> {
-    if (item.resource) {
-      const key = `${item.resource}:${item.action}`
-      if (permissionCache.value[key] === undefined) {
-        const { check } = usePermission()
-        permissionCache.value[key] = await check(item.resource, item.action ?? 'read')
-      }
-      return permissionCache.value[key]
-    }
-    if (item.children) {
-      for (const child of item.children) {
-        if (await checkItem(child)) return true
-      }
-      return false
-    }
-    return true
-  }
-
-  async function loadPermissions() {
-    for (const item of items.value) {
-      await checkItem(item)
-    }
-  }
-
   const visibleItems = computed(() => {
     function filter(items: MenuItem[]): MenuItem[] {
       return items.filter((item) => {
@@ -68,5 +43,5 @@ export const useNavStore = defineStore('nav', () => {
     return filter(items.value)
   })
 
-  return { items, visibleItems, loadPermissions }
+  return { items, visibleItems }
 })

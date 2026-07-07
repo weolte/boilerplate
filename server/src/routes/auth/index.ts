@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 import type { FastifyInstance } from "fastify";
 import {
-  refresh,
   logout,
   login,
   register,
@@ -37,18 +36,6 @@ export default async function (fastify: FastifyInstance) {
     },
     async (request, reply) => {
       return await register({ fastify, request, reply });
-    },
-  );
-
-  fastify.post(
-    "/refresh",
-    {
-      schema: {
-        tags,
-      },
-    },
-    async (request, reply) => {
-      return await refresh({ fastify, request, reply });
     },
   );
 

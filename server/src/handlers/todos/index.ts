@@ -1,5 +1,5 @@
-export { createTodo } from "./create";
-export { deleteTodo } from "./delete";
-export { getTodos } from "./getAll";
-export { getTodo } from "./getOne";
-export { updateTodo } from "./update";
+export * from "./create";
+export * from "./delete";
+export * from "./getAll";
+export * from "./getOne";
+export * from "./update";
